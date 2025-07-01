@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菜單選單編輯</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>選單編輯</h1>
+    
+    <!-- 選單表格 -->
+    <table id="menuTable">
+        <thead>
+            <tr>
+                <th>菜單編號</th>
+                <th>選單名稱</th>
+                <th>價格</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 資料將會動態插入 -->
+        </tbody>
+    </table>
+    
+    <!-- 選單編輯表單 -->
+    <form id="menuForm">
+        <h2>編輯選單</h2>
+        <input type="hidden" id="menuId" name="menuId">
+        
+        <label for="menuName">選單名稱：</label>
+        <input type="text" id="menuName" name="menuName" required>
+        
+        <label for="menuPrice">價格：</label>
+        <input type="number" id="menuPrice" name="menuPrice" step="0.01" required>
+        
+        <button type="submit">保存</button>
+        <button type="button" id="cancelEdit">取消</button>
+    </form>
+
+    <script>
+        // 獲取菜單數據的函數
+        async function fetchMenuData() {
+            try {
+                const response = await fetch('get-menu-data.php');
+                if (!response.ok) {
+                    throw new Error('網絡響應不是 OK');
+                }
+                const data = await response.json();
+                displayMenuData(data);
+            } catch (error) {
+                console.error('獲取菜單數據時發生錯誤:', error);
+            }
+        }
+
+        // 顯示菜單數據的函數
+        function displayMenuData(data) {
+            const menuContainer = document.getElementById('menu-container');
+            menuContainer.innerHTML = ''; // 清空容器
+
+            // 顯示套餐選擇
+            data.SetMeals.forEach(menu => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerHTML = `
+                    <h2>${menu.MenuName}</h2>
+                    <img src="${menu.Image}" alt="${menu.MenuName}">
+                    <p>價格: ${menu.Price} 元</p>
+                    <p>蛋白質: ${menu.ProteinChoices.join(', ')}</p>
+                    <p>配菜: ${menu.SideChoices.join(', ')}</p>
+                    <p>醬料: ${menu.SauceChoices.join(', ')}</p>
+                    <p>灑料: ${menu.SprinkleChoices.join(', ')}</p>
+                `;
+                menuContainer.appendChild(menuItem);
+            });
+
+            // 顯示自選內容和飲料選擇（如果需要）
+            // 這裡可以添加代碼來顯示 CustomOptions 和 Drinks
+        }
+
+        // 在頁面加載時獲取菜單數據
+        document.addEventListener('DOMContentLoaded', fetchMenuData);
+
+        // 模擬資料 - 在實際應用中，這些資料會從伺服器獲取
+        let menus = [
+            { MenuID: 1, MenuName: '豪華波奇', Price: 12.99 },
+            { MenuID: 2, MenuName: '簡單波奇', Price: 8.99 },
+            { MenuID: 3, MenuName: '素食波奇', Price: 10.99 }
+        ];
+        
+        // 渲染選單表格的函數
+        function renderTable() {
+            const tableBody = document.querySelector('#menuTable tbody');
+            tableBody.innerHTML = '';
+            
+            menus.forEach(menu => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${menu.MenuID}</td>
+                    <td>${menu.MenuName}</td>
+                    <td>${menu.Price.toFixed(2)}</td>
+                    <td>
+                        <button onclick="editMenu(${menu.MenuID})">編輯</button>
+                        <button onclick="deleteMenu(${menu.MenuID})">刪除</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 編輯選單的函數
+        function editMenu(menuId) {
+            const menu = menus.find(m => m.MenuID === menuId);
+            document.getElementById('menuId').value = menu.MenuID;
+            document.getElementById('menuName').value = menu.MenuName;
+            document.getElementById('menuPrice').value = menu.Price;
+        }
+
+        // 刪除選單的函數
+        function deleteMenu(menuId) {
+            menus = menus.filter(menu => menu.MenuID !== menuId);
+            renderTable();
+        }
+
+        // 表單提交處理
+        document.getElementById('menuForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const menuId = document.getElementById('menuId').value;
+            const menuName = document.getElementById('menuName').value;
+            const menuPrice = parseFloat(document.getElementById('menuPrice').value);
+            
+            if (menuId) {
+                // 編輯現有選單
+                const menu = menus.find(m => m.MenuID == menuId);
+                menu.MenuName = menuName;
+                menu.Price = menuPrice;
+            } else {
+                // 新增選單
+                const newMenu = {
+                    MenuID: menus.length + 1,
+                    MenuName: menuName,
+                    Price: menuPrice
+                };
+                menus.push(newMenu);
+            }
+            
+            document.getElementById('menuForm').reset();
+            renderTable();
+        });
+
+        // 取消編輯
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('menuForm').reset();
+        });
+        
+        // 初次渲染表格
+        renderTable();
+    </script>
+</body>
+</html>

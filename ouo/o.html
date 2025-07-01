@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理後台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* --- 基礎樣式與通用元素 --- */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa; /* 頁面淺色背景 */
+            color: #333;             /* 深灰色文字顏色 */
+            margin: 0;
+            display: flex; /* 將body設置為flex容器，有利於側邊欄佈局 */
+            min-height: 100vh; /* 確保body佔據整個視窗高度 */
+        }
+
+        /* 輸入框 (文字與數字) */
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 20px); /* 寬度佔滿容器減去內邊距，保持一致性 */
+            padding: 10px;
+            margin-bottom: 15px; /* 輸入框通用下邊距 */
+            border: 1px solid #ddd;   /* 淺灰色邊框 */
+            border-radius: 5px;       /* 輕微圓角 */
+            font-size: 16px;
+            box-sizing: border-box; /* 內邊距和邊框包含在寬度計算內 */
+        }
+
+        /* 所有按鈕 */
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer; /* 懸停時鼠標變為手型 */
+            transition: background-color 0.3s ease; /* 平滑的懸停效果 */
+            margin: 10px; /* 按鈕通用邊距 */
+        }
+
+        /* 特定按鈕顏色 */
+        .btn-primary {
+            background-color: #007bff; /* 藍色按鈕 */
+            color: white;
+        }
+        .btn-success {
+            background-color: #28a745; /* 綠色按鈕 */
+            color: white;
+        }
+        .btn-danger {
+            background-color: #dc3545; /* 紅色按鈕 */
+            color: white;
+        }
+
+        /* --- 儀表板與菜單管理區塊 --- */
+        .dashboard {
+            padding: 20px;
+            font-family: Arial, sans-serif; /* 儀表板內容特定字體 */
+            display: block; /* 讓dashboard默認顯示，如果這是主要的內容區 */
+            width: 100%; /* 確保它佔據可用寬度 */
+        }
+
+        /* 菜單列表頂部的搜尋和新增按鈕容器 */
+        #menu-header-actions {
+            display: flex;
+            align-items: center; /* 垂直居中對齊 */
+            gap: 10px;           /* 項目間距 */
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* 允許在小螢幕上換行 */
+        }
+
+        #menu-header-actions input[type="text"] {
+            flex-grow: 1; /* 搜尋輸入框佔據剩餘空間 */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 0; /* 覆蓋通用輸入框的下邊距 */
+        }
+
+        #menu-header-actions button {
+            padding: 8px 15px; /* 調整此區域按鈕的內邊距 */
+            margin: 0; /* 移除通用按鈕的邊距 */
+        }
+
+        /* 原本的 #menu-actions 區塊，現在被隱藏 */
+        #menu-actions {
+            display: none; /* 隱藏舊的搜尋、新增、修改區塊 */
+        }
+
+        /* 新增/修改表單的樣式，如果它們以隱藏區塊形式存在 */
+        #add-section,
+        #update-section {
+            display: none; /* 默認隱藏，通過JS控制顯示 */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        /* --- 菜單列表顯示區域 --- */
+        #menu-list-content {
+            margin: 0 auto; /* 水平居中 */
+            max-width: 1200px; /* 限制最大寬度 */
+            overflow-x: auto; /* 允許在小螢幕上水平滾動 */
+        }
+
+        /* --- 表格樣式 --- */
+        table {
+            width: 100%;             /* 表格佔據其容器的全部寬度 */
+            border-collapse: collapse; /* 合併單元格邊框 */
+            margin-bottom: 20px;     /* 表格下方間距 */
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd; /* 淺灰色邊框 */
+            padding: 10px;
+            text-align: center;     /* 文字居中 */
+        }
+
+        th {
+            background-color: #f4f4f4; /* 表格頭部背景色 */
+        }
+
+        tr:hover {
+            background-color: #f9f9f9; /* 滑鼠懸停時的行背景色 */
+        }
+
+        /* 表格內的圖片 */
+        td img { /* 僅針對 td 內的圖片 */
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover; /* 保持圖片比例並填充內容框 */
+            border-radius: 4px; /* 圖片圓角 */
+        }
+
+        /* --- 側邊欄與員工資訊 (保留原有樣式) --- */
+        .sidebar-logo {
+            padding: 18px;
+            text-align: center;
+            background-color: #9aa0a8;
+            font-size: 1.0rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo img {
+            width: 40px;
+            height: auto;
+        }
+
+        .navbar {
+            width: 200px;
+            background-color: #2c3e50; /* 深藍灰色背景 */
+            height: 100vh;           /* 全視窗高度 */
+            position: fixed;         /* 滾動時保持不動 */
+            padding-top: 3px;
+            display: flex; /* 設置為flex以更好地對齊項目 */
+            flex-direction: column; /* 垂直堆疊項目 */
+        }
+
+        .navbar a,
+        .navbar button {
+            text-decoration: none;
+            color: #ecf0f1;        /* 淺色文字 */
+            padding: 13px;
+            display: block;
+            text-align: left;
+            font-size: 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .navbar a i,
+        .navbar button i {
+            margin-right: 10px;
+        }
+        .navbar a:hover,
+        .navbar button:hover {
+            background-color: #34495e; /* 懸停時背景變深 */
+        }
+
+        .dropdown {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown[aria-expanded="true"] .dropdown-content {
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 200px; /* 推開固定側邊欄的內容 */
+            padding: 20px;
+            flex: 1; /* 讓主內容佔據剩餘空間 */
+            box-sizing: border-box; /* 內邊距包含在寬度內 */
+        }
+
+        /* 註釋掉舊的 .card 樣式，因為菜單列表現在是表格形式 */
+        /* .card { ... } */
+
+        /* 新增菜品表單 (如果存在，保留原有樣式) */
+        #add-dish {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none; /* 默認隱藏 */
+        }
+        #add-dish h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #add-dish-form .form-group {
+            margin-bottom: 20px;
+        }
+        #add-dish-form label {
+            font-weight: bold;
+            color: #555;
+        }
+        #add-dish-form input[type="text"],
+        #add-dish-form input[type="number"],
+        #add-dish-form select,
+        #add-dish-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        #add-dish-form textarea {
+            resize: vertical;
+        }
+        #add-dish-form .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #add-dish-form .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -5px;
+            margin-left: -5px;
+        }
+        .form-row>.form-group {
+            padding-right: 5px;
+            padding-left: 5px;
+            flex: 1;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-top: auto; /* 推到flex容器底部 */
+            background-color: #576558;
+            color: white;
+            width: 100%; /* 確保其佔據側邊欄寬度 */
+            box-sizing: border-box;
+        }
+        .employee-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .employee-info span {
+            font-size: 14px;
+        }
+        .navbar a.btn.btn-danger {
+            margin-bottom: 10px;
+        }
+
+        /* --- 主題與用戶資訊 --- */
+        /* 默認淺色主題 */
+        /* body { background-color: white; color: black; } */
+
+        /* 深色主題 */
+        .dark-theme {
+            background-color: black;
+            color: white;
+        }
+
+        #logged-in-user-info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background-color: #7e87cb;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            z-index: 1000; /* 確保在頂層 */
+        }
+
+        #employee-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        #employee-name {
+            font-size: 14px;
+        }
+
+        /* --- 分類管理 (如果使用) --- */
+        #category-management {
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            display: none; /* 默認隱藏 */
+        }
+        .category-actions,
+        .category-list,
+        .category-details,
+        .delete-category {
+            margin-bottom: 20px;
+        }
+        #category-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #category-list li {
+            background-color: white;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #category-details-content {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .inventory .panel {
+            width: 100%;
+            display: none; /* 默認隱藏 */
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="sidebar-logo">
+            <img src="http://localhost/ouo/logo.png" alt="Logo">
+            <span>管理後台</span>
+        </div>
+        <a href="#dashboard" id="show-dashboard"><i class="fas fa-home"></i> 儀表板</a>
+        <a href="#menu-list" id="show-menu-list"><i class="fas fa-utensils"></i> 菜單管理</a>
+        <a href="#order-management" id="show-order-management"><i class="fas fa-clipboard-list"></i> 訂單管理</a>
+        <a href="#inventory-management" id="show-inventory-management"><i class="fas fa-boxes"></i> 庫存管理</a>
+        <a href="#reports" id="show-reports"><i class="fas fa-chart-line"></i> 報表</a>
+        <a href="#user-management" id="show-user-management"><i class="fas fa-users"></i> 用戶管理</a>
+        <a href="#category-management" id="show-category-management"><i class="fas fa-sitemap"></i> 分類管理</a>
+
+        <div class="employee-info">
+            <img src="http://localhost/ouo/employee.png" alt="Employee Avatar">
+            <span>員工: 王小明</span>
+        </div>
+        <button id="logout-button" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> 登出</button>
+    </div>
+
+    <div class="main-content">
+        <div id="dashboard" class="dashboard active">
+            <h2>儀表板</h2>
+            <p>歡迎來到管理後台！</p>
+            <div id="dashboard-cards" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                </div>
+        </div>
+
+        <div id="menu-list" class="dashboard">
+            <h3>菜單列表</h3>
+
+            <div id="menu-header-actions">
+                <input type="text" id="search-input" placeholder="搜尋菜單項目">
+                <button id="search-button" class="btn-primary">搜尋</button>
+                <button id="add-new-menu-item-button" class="btn-primary">新增菜單</button>
+            </div>
+
+            <div id="menu-list-content">
+                </div>
+
+            <div id="add-section" style="display: none;">
+                <h3>新增菜單項目</h3>
+                <input type="text" id="add-menu-name" placeholder="菜單名稱">
+                <input type="number" id="add-menu-price" placeholder="價格">
+                <button id="add-button" class="btn-success">確認新增</button>
+            </div>
+
+            <div id="update-section" style="display: none;">
+                <h3>修改菜單項目</h3>
+                <input type="number" id="update-menu-id" placeholder="菜單 ID">
+                <input type="text" id="update-menu-name" placeholder="新菜單名稱">
+                <input type="number" id="update-menu-price" placeholder="新價格">
+                <button id="update-button" class="btn-primary">確認修改</button>
+            </div>
+        </div>
+
+        <div id="order-management" class="dashboard">
+            <h2>訂單管理</h2>
+            <p>此處顯示所有訂單。</p>
+        </div>
+
+        <div id="inventory-management" class="dashboard">
+            <h2>庫存管理</h2>
+            <p>此處顯示庫存詳細資訊。</p>
+        </div>
+
+        <div id="reports" class="dashboard">
+            <h2>報表</h2>
+            <p>此處顯示各類銷售報表。</p>
+        </div>
+
+        <div id="user-management" class="dashboard">
+            <h2>用戶管理</h2>
+            <p>此處管理用戶帳戶。</p>
+        </div>
+
+        <div id="category-management" class="dashboard">
+            <h2>分類管理</h2>
+            <div class="category-actions">
+                <input type="text" id="category-name" placeholder="分類名稱">
+                <button id="add-category" class="btn-success">新增分類</button>
+                <button id="update-category-button" class="btn-primary">修改分類</button>
+                <button id="delete-category-button" class="btn-danger">刪除分類</button>
+            </div>
+            <ul id="category-list">
+                </ul>
+            <div id="category-details-content" style="display:none;">
+                </div>
+        </div>
+    </div>
+
+    <div id="logged-in-user-info">
+        <img id="employee-avatar" src="http://localhost/ouo/employee.png" alt="員工頭像">
+        <span id="employee-name">員工: 王小明</span>
+    </div>
+
+    <script>
+        // DOMContentLoaded 確保在HTML加載完成後再執行JS
+        document.addEventListener('DOMContentLoaded', function() {
+            // 處理導航菜單點擊事件
+            const navLinks = document.querySelectorAll('.navbar a');
+            const dashboards = document.querySelectorAll('.dashboard');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // 阻止默認跳轉行為
+
+                    // 移除所有dashboard的active類
+                    dashboards.forEach(dashboard => {
+                        dashboard.classList.remove('active');
+                    });
+
+                    // 獲取點擊鏈接的目標ID
+                    const targetId = this.getAttribute('href').substring(1); // 移除 '#'
+                    const targetDashboard = document.getElementById(targetId);
+
+                    // 如果目標dashboard存在，則添加active類使其顯示
+                    if (targetDashboard) {
+                        targetDashboard.classList.add('active');
+
+                        // 對於菜單管理頁面，確保呼叫 displayMenu 函數
+                        if (targetId === 'menu-list') {
+                            fetchAndDisplayMenu();
+                        }
+                        // 如果是其他頁面，可以加載相應數據
+                        else if (targetId === 'category-management') {
+                            fetchAndDisplayCategories();
+                        }
+                        else if (targetId === 'dashboard') {
+                            fetchAndDisplayDashboardCards();
+                        }
+                    }
+                });
+            });
+
+            // 登出按鈕事件監聽
+            document.getElementById('logout-button').addEventListener('click', function() {
+                alert('您已登出！'); // 替換為實際登出邏輯
+                // window.location.href = 'login.html'; // 重定向到登入頁面
+            });
+
+            // =========================================================
+            // 菜單管理相關功能 (調整為符合圖片樣式)
+            // =========================================================
+
+            // 獲取並顯示菜單數據
+            function fetchAndDisplayMenu() {
+                fetch('http://localhost/ouo/get-menu-data.php')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('網路回應不正常 ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => displayMenu(data))
+                    .catch(error => console.error('獲取菜單數據時出錯:', error));
+            }
+
+            // 顯示菜單數據到表格中 (核心修改部分，符合圖片樣式)
+            function displayMenu(data) {
+                const menuListContent = document.getElementById('menu-list-content');
+                let tableHtml = `
+                    <table border="1" cellspacing="0" cellpadding="10">
+                        <thead>
+                            <tr>
+                                <th>圖片</th>
+                                <th>名稱</th>
+                                <th>價格</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                // 只渲染 SetMeals (套餐)，因為圖片只顯示主菜單列表
+                if (data.SetMeals && data.SetMeals.length > 0) {
+                    tableHtml += data.SetMeals.map(menu => {
+                        let imageUrl;
+                        // 根據MenuName設置不同的圖片鏈接
+                        if (menu.MenuName === '豪華波奇') {
+                            imageUrl = 'http://localhost/ouo/Deluxe%20Poch.jpg';
+                        } else if (menu.MenuName === '素食波奇') {
+                            imageUrl = 'http://localhost/ouo/Vegetarian%20Pochi.jpg';
+                        } else if (menu.MenuName === '簡單波奇') {
+                            imageUrl = 'http://localhost/ouo/Simple%20Poch.jpg';
+                        } else {
+                            // 默認圖片鏈接
+                            imageUrl = 'http://localhost/ouo/default-image.jpg';
+                        }
+
+                        return `
+                            <tr>
+                                <td><img src="${imageUrl}" alt="${menu.MenuName}"></td>
+                                <td>${menu.MenuName}</td>
+                                <td>${menu.Price.toFixed(2)} 元</td>
+                                <td>
+                                    <button class="edit-menu-item-button btn-primary" data-id="${menu.MenuID}">編輯</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tableHtml += `<tr><td colspan="4">沒有找到菜單項目。</td></tr>`;
+                }
+
+                tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+                menuListContent.innerHTML = tableHtml;
+
+                // 為「編輯」按鈕添加事件監聽器
+                document.querySelectorAll('.edit-menu-item-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const menuId = this.getAttribute('data-id');
+                        // 在這裡，您可以觸發顯示修改表單（例如，彈出 `#update-section` 或一個模態框）
+                        alert('您點擊了編輯菜單 ID: ' + menuId + '。將載入修改表單。');
+                        // 範例：顯示修改表單並填充數據 (您需要實現 showUpdateForm 函數)
+                        // showUpdateForm(menuId);
+                        document.getElementById('update-section').style.display = 'block';
+                        // 假設您有一個獲取單個菜單詳細的 API，並填充到表單
+                        // fetch('http://localhost/ouo/get-menu-details.php?id=' + menuId)
+                        //     .then(res => res.json())
+                        //     .then(data => {
+                        //         document.getElementById('update-menu-id').value = data.MenuID;
+                        //         document.getElementById('update-menu-name').value = data.MenuName;
+                        //         document.getElementById('update-menu-price').value = data.Price;
+                        //     });
+                    });
+                });
+            }
+
+            // 搜尋功能
+            document.getElementById('search-button').addEventListener('click', function () {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                fetch('http://localhost/ouo/get-menu-data.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        const filteredMenu = {
+                            SetMeals: data.SetMeals.filter(menu =>
+                                menu.MenuName.toLowerCase().includes(searchTerm) ||
+                                String(menu.MenuID).includes(searchTerm) // 也可以搜尋ID
+                            )
+                        };
+                        displayMenu(filteredMenu);
+                    })
+                    .catch(error => console.error('獲取菜單數據時出錯:', error));
+            });
+
+            // 新增菜單按鈕事件監聽 (觸發顯示新增表單)
+            document.getElementById('add-new-menu-item-button').addEventListener('click', function() {
+                // 這裡可以顯示 `#add-section` 表單，或者打開一個模態框
+                const addSection = document.getElementById('add-section');
+                if (addSection) {
+                    addSection.style.display = 'block'; // 顯示新增表單
+                    // 您可能還需要隱藏其他dashboard，或使用模態框庫來處理
+                }
+                alert('點擊了新增菜單按鈕！將顯示新增表單。');
+            });
+
+            // 「確認新增」按鈕的事件監聽器 (位於 #add-section 內)
+            document.getElementById('add-button').addEventListener('click', function () {
+                const name = document.getElementById('add-menu-name').value.trim();
+                const price = parseFloat(document.getElementById('add-menu-price').value);
+
+                if (!name || isNaN(price) || price <= 0) {
+                    alert('請輸入有效的名稱和價格！');
+                    return;
+                }
+
+                fetch('http://localhost/ouo/add-menu.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, price })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('菜單項目新增成功！');
+                        document.getElementById('add-section').style.display = 'none'; // 隱藏表單
+                        fetchAndDisplayMenu(); // 重新提取和顯示菜單
+                    } else {
+                        alert('新增菜單項目失敗。');
+                    }
+                })
+                .catch(error => console.error('新增菜單項目時出錯:', error));
+            });
+
+            // 「確認修改」按鈕的事件監聽器 (位於 #update-section 內)
+            document.getElementById('update-button').addEventListener('click', function () {
+                const id = parseInt(document.getElementById('update-menu-id').value);
+                const name = document.getElementById('update-menu-name').value;
+                const price = parseFloat(document.getElementById('update-menu-price').value);
+
+                if (!id || !name || isNaN(price) || price <= 0) {
+                    alert('請輸入有效的菜單 ID、名稱和價格！');
+                    return;
+                }
+
+                fetch('http://localhost/ouo/update-menu.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id, name, price })
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert('菜單項目修改成功！');
+                            document.getElementById('update-section').style.display = 'none'; // 隱藏表單
+                            fetchAndDisplayMenu(); // 重新提取和顯示菜單
+                        } else {
+                            alert('修改菜單項目失敗。');
+                        }
+                    })
+                    .catch(error => console.error('更新菜單項目時出錯:', error));
+            });
+
+            // =========================================================
+            // 其他功能 (保留原有邏輯，註解已漢化)
+            // =========================================================
+
+            // 儀表板數據獲取與顯示
+            function fetchAndDisplayDashboardCards() {
+                const dashboardCards = document.getElementById('dashboard-cards');
+                dashboardCards.innerHTML = `
+                    <div class="card">
+                        <h3>總收入</h3>
+                        <p>$1,500,000</p>
+                    </div>
+                    <div class="card">
+                        <h3>今日訂單</h3>
+                        <p>120 筆</p>
+                    </div>
+                    <div class="card">
+                        <h3>熱銷產品</h3>
+                        <ul>
+                            <li>豪華波奇</li>
+                            <li>素食波奇</li>
+                            <li>自選波奇</li>
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // 分類管理相關功能
+            function fetchAndDisplayCategories() {
+                fetch('http://localhost/ouo/get-categories.php')
+                    .then(response => response.json())
+                    .then(categories => {
+                        const categoryList = document.getElementById('category-list');
+                        categoryList.innerHTML = '';
+                        categories.forEach(category => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <span>${category.CategoryName} (ID: ${category.CategoryID})</span>
+                                <div>
+                                    <button class="view-category-details btn-primary" data-id="${category.CategoryID}">查看</button>
+                                </div>
+                            `;
+                            categoryList.appendChild(li);
+                        });
+
+                        document.querySelectorAll('.view-category-details').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const categoryId = this.getAttribute('data-id');
+                                fetchCategoryDetails(categoryId);
+                            });
+                        });
+                    })
+                    .catch(error => console.error('獲取分類時出錯:', error));
+            }
+
+            function fetchCategoryDetails(categoryId) {
+                fetch(`http://localhost/ouo/get-category-details.php?id=${categoryId}`)
+                    .then(response => response.json())
+                    .then(details => {
+                        const categoryDetailsContent = document.getElementById('category-details-content');
+                        if (details) {
+                            categoryDetailsContent.innerHTML = `
+                                <h4>分類名稱: ${details.CategoryName}</h4>
+                                <p>分類 ID: ${details.CategoryID}</p>
+                                <p>描述: ${details.Description || '無'}</p>
+                                `;
+                            categoryDetailsContent.style.display = 'block';
+                        } else {
+                            categoryDetailsContent.innerHTML = '<p>找不到分類詳情。</p>';
+                            categoryDetailsContent.style.display = 'block';
+                        }
+                    })
+                    .catch(error => console.error('獲取分類詳情時出錯:', error));
+            }
+
+            document.getElementById('add-category').addEventListener('click', function() {
+                const categoryName = document.getElementById('category-name').value.trim();
+                if (!categoryName) {
+                    alert('請輸入分類名稱！');
+                    return;
+                }
+                fetch('http://localhost/ouo/add-category.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: categoryName })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('分類新增成功！');
+                        document.getElementById('category-name').value = ''; // 清空輸入框
+                        fetchAndDisplayCategories();
+                    } else {
+                        alert('新增分類失敗：' + result.message);
+                    }
+                })
+                .catch(error => console.error('新增分類時出錯:', error));
+            });
+
+            document.getElementById('update-category-button').addEventListener('click', function() {
+                const categoryId = prompt('請輸入要修改的分類 ID：');
+                if (categoryId) {
+                    const newName = prompt('請輸入新的分類名稱：');
+                    if (newName) {
+                        fetch('http://localhost/ouo/update-category.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: categoryId, name: newName })
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                alert('分類修改成功！');
+                                fetchAndDisplayCategories();
+                            } else {
+                                alert('修改分類失敗：' + result.message);
+                            }
+                        })
+                        .catch(error => console.error('更新分類時出錯:', error));
+                    }
+                }
+            });
+
+            document.getElementById('delete-category-button').addEventListener('click', function() {
+                const categoryId = prompt('請輸入要刪除的分類 ID：');
+                if (categoryId && confirm('確定要刪除此分類嗎？')) {
+                    fetch('http://localhost/ouo/delete-category.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: categoryId })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert('分類刪除成功！');
+                            fetchAndDisplayCategories();
+                        } else {
+                            alert('刪除分類失敗：' + result.message);
+                        }
+                        document.getElementById('category-details-content').style.display = 'none'; // 隱藏詳情
+                    })
+                    .catch(error => console.error('刪除分類時出錯:', error));
+                }
+            });
+
+
+            // 初始加載儀表板
+            fetchAndDisplayDashboardCards();
+        });
+    </script>
+</body>
+</html>

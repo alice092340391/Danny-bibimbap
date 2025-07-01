@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飲料頁面</title>
+    <style>
+        /* 全局樣式 */
+ 
+         @font-face {
+             font-family: Lemon-Regular;
+             src: url(Lemon-Regular.ttf) format("opentype");
+         }
+ 
+         *,
+         *::after,
+         *::before {
+             box-sizing: border-box;
+             margin: 0px;
+         }
+ 
+         a {
+             text-decoration: none
+         }
+ 
+         a:hover {
+             text-decoration: none
+         }
+ 
+         .html {
+             font-size: 62.5%;
+         }
+        * {
+             margin: 0;
+             padding: 0;
+             box-sizing: border-box;
+         }
+ 
+         body {
+             font-family: "Lemon", serif;
+             font-weight: 400;
+             font-style: normal;
+             padding: 0;
+             display: inline;
+             background-attachment: fixed;
+         }
+ 
+         .container {
+             width: 100%;
+             margin: auto;
+             padding: 20px;
+             margin-left: 0px;
+             padding-left: 0px;
+             margin-right: 0px;
+             padding-right: 0px;
+             padding-top: 0px;
+             position: relative;  
+ 
+ 
+         }
+ 
+         
+         #contents {
+             width: 100%; /* 撐滿整個容器 */
+             height:1900px;
+             background: #1C4425;
+             padding: 20px; /* 內邊距 */
+             padding-top: 0px;
+             padding-left: 0px;
+             padding-right: 0px;
+             
+         }
+ 
+           .main-header{
+           height:50px;
+ 
+         }
+ 
+ 
+         .showcase-area {
+             height: 138px;
+             background-size: cover;
+             background-position: center;
+             background-repeat: no-repeat;
+ 
+         }
+ 
+         .showcase-container {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             height: 315px;
+             font-size: 1.4rem;
+             font-weight: bold;
+             margin-bottom: 829px;
+         }
+ 
+         .title {
+ 
+         background-color: #333 ;
+         background-size: cover; /* 確保背景圖片覆蓋整個區域 */
+         color: #fff;
+         margin: 0;
+         font-size: 2rem;
+         height: auto; /* 自適應高度 */
+         padding: 10px 0; /* 內邊距確保文字有空間 */
+         line-height: 35px;
+         text-align: center;
+         font-size: 30px;
+         border-top-width: 20px;
+         padding-top: 10px;
+         border-top-width: 20px;
+         padding-top: 10px;
+         padding-left: 3px;
+ 
+         }
+ 
+ 
+ 
+         /* Menu Section */
+             .middle  {
+                 color: #fff;
+                 display: flex;
+                 align-items: center;
+                 gap: 1rem; /* Space between buttons */
+                 padding: 1rem;
+                 position: fixed;
+                 top: 30px;
+                 left: 47%;
+                 transform: translateX(-49%);
+                 z-index: 1000;
+                 width: 100%;
+                 justify-content: space-around;
+                 position: absolute;
+                 }
+                 
+             
+                 .carousel-container {
+                 display: flex;
+                 flex-wrap: wrap;
+                 gap: 1rem;
+                 justify-content: center;
+                 padding: 2rem 0;
+                 padding-top: 0px;
+ 
+             }
+             .carousel-item {
+                 width: 100%;
+                 max-width: 200px;
+                 text-align: center;
+                 overflow-y: auto; /* 開啟垂直滾動條 */
+                 scroll-behavior: smooth; /* 平滑滾動效果 */
+                 -webkit-overflow-scrolling: touch; /* 啟用移動裝置上的平滑滾動 */
+             }
+ 
+                 .carousel-container::-webkit-scrollbar {
+             display: none; /* 隱藏滾動條（適用於 Chrome、Safari） */
+             }  
+ 
+             .carousel-item img {
+                 width: 100%;
+                 height: auto;
+                 border-radius: 10px;
+             }
+ 
+             .rounded-icon-btn {
+             background-color: transparent; /* 無背景色 */
+             border: 2px solid #fff;        /* 白色邊框 */
+             border-radius: 15px;           /* 圓角 */
+             color: #fff;                   /* 圖示顏色 */
+             width:253px;                 /* 按鈕寬度 */ 
+             height: 290.2px;               /* 按鈕高度 */ 
+             margin-top: 20px;
+             margin-left: 76px;
+             margin-right: 75px;                /* 按鈕高度 */
+             align-items: center;
+             justify-content: center;
+             cursor: pointer;               /* 點擊效果 */
+             font-size: 1.5em;              /* 圖示大小 */
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+         }
+ 
+             .rounded-icon-btn img {
+             width: 120px;                   /* 圖片寬度佔滿按鈕 */
+             height: 120px;                  /* 圖片高度佔滿按鈕 */
+             border-radius: 15px;           /* 圖片圓角 */
+ 
+         }
+    
+         #cart-modal,
+             #checkout-modal {
+             display: none;
+             position: absolute;
+             z-index: 999;
+             /* 設置較高的 z-index 確保模態框覆蓋所有內容 */
+             left: 50%;
+             top: 30%;
+             transform: translate(-50%, -50%);
+             width: 360px;
+             /* 模態框寬度 */
+             height: 400px;
+             /* 高度根據內容調整 */
+             background-color: white;
+             /* 背景顏色 */
+             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+             /* 加入陰影 */
+             padding: 20px;
+             /* 內邊距 */
+             border-radius: 8px;
+             /* 邊角圓滑 */
+             overflow: auto;
+             background-color: rgba(0, 0, 0, 0.5);
+             padding-top: 60px;
+             
+         }
+ 
+ 
+             /* Modal Styles */
+             .modal-content {
+                 background-color: #fefefe;
+                 margin: auto;
+                 padding: 10px;
+                 border: 1px solid #888;
+                 width: 100%;
+                 height: 100%;
+                 overflow: auto;
+             }
+ 
+             .modal-overlay {
+                 display: none;
+                 position: fixed;
+                 top: 0;
+                 left: 0;
+                 width: 100%;
+                 height: 100%;
+                 background-color: rgba(0, 0, 0, 0.5);
+                 z-index: 998;
+             }
+ 
+             .close {
+                 color: #aaa;
+                 float: right;
+                 font-size: 28px;
+                 font-weight: bold;
+             }
+ 
+             .close:hover,
+             .close:focus {
+                 color: black;
+                 text-decoration: none;
+                 cursor: pointer;
+             }
+ 
+ 
+             .cart-item {
+             margin-bottom: 10px;
+             color: black;
+         }
+ 
+             .cart-items-container {
+                 max-height: 200px;
+                 /* 限制高度以便滾動 */
+                 overflow-y: auto;
+                 /* 允許垂直滾動 */
+                 margin-bottom: 10px;
+                 /* 提供一些底部間距 */
+             }
+ 
+             .remove-button {
+                 color: red;
+                 cursor: pointer;
+             }
+ 
+             .button {
+                 position: absolute;
+                 background-color: #FCCB29;
+                 border-radius: 10px;
+                 font-weight: 900;
+                 padding: 10px 20px;
+                 border: none;
+                 cursor: pointer;
+                 display: block;
+                 margin-bottom: 10px; 
+                 top: 10px; /* 調整按鈕的位置 */  
+                 left: 10px; /* 調整按鈕的位置 */  
+                 z-index: 0; /* 設定 z-index，確保在長方形後面 */
+             }  
+ 
+              
+             /* Notification Styles */
+             #notification {
+                 display: none;
+                 position: fixed;
+                 top: 20px;
+                 right: 20px;
+                 background-color: #28a745;
+                 color: white;
+                 padding: 10px;
+                 border-radius: 5px;
+                 z-index: 1000;
+             }
+ 
+             .options-container {
+             margin-left: 20px;
+             /* Add space between the interactive container and the options */
+             }
+ 
+             button {
+                 border-radius: 10px;
+                 font-weight: 900;
+                 padding: 10px 20px;
+                 border: none;
+                 cursor: pointer;
+                 display: block;
+                 /* 確保按鈕顯示 */
+                 /* 保證按鈕位於前面 */
+                 margin-bottom: 10px;
+                 background-color: #FCCB29;
+                 COLOR: #FFF;
+                 BORDER-COLOR: #FFF;
+                 border: 2px solid #fff
+ 
+             }
+ 
+ 
+         .cart-wrap {  
+         position: fixed;  
+         background-size: cover;  
+         bottom: 0; /* 固定在螢幕底部 */  
+         left: 0;  
+         width: 100%; /* 讓寬度滿版 */  
+         background-color: #333;  
+         color: white;  
+         text-align: center;  
+         display: flex;  
+         justify-content: flex-end; /* 右对齐 */  
+         align-items: flex-start; /* 向上对齐 */  
+         padding: 10px 20px; /* 預設內邊距 */  
+         z-index: 1;  
+         flex-direction: column; /* 改为垂直排列 */  
+        }  
+ 
+ 
+             #checkout-total {  
+             width: 100%; /* 确保宽度适应 */  
+             text-align: left; /* 强制靠左 */
+         }  
+ 
+         .button-group {  
+             display: flex; /* 使用flex排列按钮 */  
+             flex-direction: column; /* 垂直排列按钮 */  
+             align-items: flex-end; /* 右对齐按钮 */  
+             margin-top: 10px; /* 按钮之间的间距 */  
+             margin-top: 0px;
+         }  
+ 
+         .cart-button{
+ 
+             margin: 5px; /* 按钮之间的间距 */  
+             padding: 15px 0; /* 按钮内边距，确保按钮高度一致 */  
+             width: 200px; /* 固定宽度，以确保按钮尺寸一致 */  
+             background-color: yellow; /* 按钮背景颜色 */  
+             border: none; /* 去掉边框 */  
+             border-radius: 5px; /* 圆角按钮 */  
+             cursor: pointer; /* 鼠标悬停为手型 */  
+             font-size: 16px; /* 按钮字体大小 */  
+             text-align: center; /* 确保文本居中 */  
+ 
+             }
+     
+ 
+         .cart-button:hover {  
+             background-color: #f0c040; /* 悬停效果 */  
+         }   
+ 
+ 
+ 
+ 
+ 
+        
+ 
+             .footer {
+             text-align: center;
+             font-size: 1.8rem;
+             padding: 1.6rem;
+             font-weight: 500;
+             color: #fff;
+             background: #014e2a;
+             bottom: 0;
+             width: 352px;
+             border: solid 2px;
+             left: 650px;
+             border-bottom-width: 3px;
+             border-right-width: 0px;
+             border-left-width: 0px;
+             }
+ 
+             .interactive-container {
+                 width: 140px;
+                 height: 267px;
+                 border-radius: 15px;
+                 background-color: #fff;
+                 overflow: hidden;
+                 z-index: 1000;
+                 margin: 20px;
+                 margin-left: 5px;
+                 z-index: 1;
+                 /* 設置較低的 z-index，確保模態框能覆蓋它 */
+                 margin-left: 10px;
+             }
+ 
+             .option-container {
+                 display: flex;
+                 align-items: center;
+                 padding: 15px;
+                 border-bottom: 1px solid #eee;
+                 position: relative;
+                 cursor: pointer;
+                 transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                 background-color: #ffffff;
+                 width: 200px;
+                 /* 固定寬度，例如 200px */
+                 box-sizing: border-box;
+                 /* 確保內邊距和邊框不影響寬度 */
+             }
+ 
+             .option-container:last-child {
+                 border-bottom: none;
+             }
+ 
+             .option-container input[type="radio"] {
+                 appearance: none;
+                 -webkit-appearance: none;
+                 border: 2px solid #ccc;
+                 width: 20px;
+                 height: 20px;
+                 border-radius: 50%;
+                 margin-right: 15px;
+                 outline: none;
+                 cursor: pointer;
+             }
+ 
+             .option-container input[type="radio"]:checked {
+                 border-color: #ffd700;
+                 background-color: #ffd700;
+             }
+ 
+             .option-container label {
+                 cursor: pointer;
+                 color: #333;
+                 transition: color 0.3s ease;
+             }
+ 
+             .subtext {
+                 position: absolute;
+                 right: 10px;
+                 color: #888;
+                 font-size: 14px;
+                 transition: color 0.3s ease;
+             }
+ 
+             .result {
+                 margin-top: 10px;
+                 padding: 10px;
+                 border-radius: 5px;
+                 display: block;
+                 width: 220px;
+                 /* 設定結果區的寬度 */
+                 margin-left: 10px;
+ 
+ 
+             }
+ 
+             .option-container .highlight {
+                 position: absolute;
+                 left: 0;
+                 width: 5px;
+                 height: 100%;
+                 background-color: transparent;
+             }
+ 
+             .option-container input[type="radio"]:checked~.highlight {
+                 background-color: #ffd700;
+             }
+ 
+             .option-container.active {
+                 transform: translateY(-5px);
+                 box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                 background-color: #000;
+                 border: 2px solid #ffd700;
+                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+                 /* Raised effect */
+             }
+ 
+             .option-container.active label,
+             .option-container.active .subtext {
+                 color: #fff;
+             }
+ 
+             .product-description {
+                 position: relative;
+                 /* 使 .product-description 成為定位參考 */
+                 width: 352px;
+                 /* 根據需要設置寬度 */
+                 height: 1100px;
+                 /* 根據需要設置高度 */
+                 text-align: left;
+                 color: #fff;
+                 font-size: 18px;
+                 background-color: #1c4425;
+                 padding: 15px;
+                 border-radius: 10px;
+                 margin-bottom: 15px;
+                 margin-top: 20px;
+                 /* 根據需要設置 */
+                 top: 200px;
+                 padding-left: 0px;
+                 padding-right: 0px;
+             }
+ 
+             .product-description h2 {
+                 font-size: 25px;
+                 margin: 0 0 10px;
+             }
+ 
+             .product-description p {
+                 margin: 0;
+             }
+ 
+ 
+ 
+      
+             /* Button styles */
+ 
+             .btn-50,
+             .btn-50 *,
+             .btn-50 :after,
+             .btn-50:after,
+             .btn-50:before {
+                 border: 0 solid;
+                 box-sizing: border-box;
+             }
+ 
+             .btn-50 {
+                 -webkit-tap-highlight-color: transparent;
+                 background-color: #000;
+                 border-width: 3px;
+                 background-image: none;
+                 color: #fff;
+                 cursor: pointer;
+                 font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+                     Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+                 font-size: 100%;
+                 line-height: 1.5;
+                 margin: 0;
+                 padding: 0;
+             }
+ 
+             .btn-50:disabled {
+                 cursor: default;
+             }
+ 
+             .btn-50:-moz-focusring {
+                 outline: auto;
+             }
+ 
+             .btn-50 svg {
+                 display: block;
+             }
+ 
+             .btn-50 [hidden] {
+                 display: none;
+             }
+             .btn-50 {
+                 background: #FCCB29;
+                 color: #ffffff;
+                 border-radius: 10px; /* Rounded corners */
+                 padding: 15px 20px;
+                 font-weight: bold;
+                 text-transform: uppercase;
+                 text-align: center;
+                 text-decoration: none; /* Remove underline */
+                 flex: 1; /* Buttons evenly share space */
+                 max-width: 200px; /* Prevent buttons from getting too large */
+                 transition: all 0.3s ease;
+                 box-sizing: border-box;
+                 display: block;
+                 font-weight: 900;
+                 perspective: 800px;
+                 position: relative;
+                 transition: transform 0.2s;
+                 padding-left: 20px;
+                 padding-bottom: 20px;
+                 padding-top: 10px;
+                 height: 70.8px;
+                 padding-right: 20px;
+                 font-size: 14px;
+             }
+ 
+             .btn-50:hover {
+                 background-color: #e0a900;
+                 transform: scale(1.05);
+                 transform: rotateX(38deg) translateY(7px);
+             }
+ 
+             /* Responsive Design */
+             @media (max-width: 768px) {
+                 .menu {
+                     gap: 0.5rem; /* Reduce space between buttons for smaller screens */
+                 }
+ 
+                 .btn-50 {
+                     padding: 10px 15px;
+                 }
+ 
+                 .cart-wrap {
+                 padding: 10px 15px; /* 調整內邊距 */
+                 font-size: 14px; /* 字體大小調整 */
+                 }
+ 
+ 
+ 
+ 
+             }
+ 
+             @media (min-width: 600px) {
+                  .cart-wrap {
+                     flex-direction: column; /* 縱向排列，以便在窄螢幕上更易讀 */
+                     padding: 15px; /* 調整內邊距 */
+                     text-align: center; /* 確保文字置中對齊 */
+                 }
+             }
+ 
+             @media (max-width: 480px) {
+                 .btn-50 {
+                     padding: 8px 12px; /* Adjust padding for smaller screens */
+                 }
+ 
+                 .cart-wrap {
+                 padding: 8px 10px; /* 調整內邊距 */
+                 font-size: 12px; /* 字體大小調整 */
+                 flex-direction: column; /* 讓內容垂直排列 */
+                 align-items: center; /* 中央對齊 */
+             }
+ 
+ 
+ 
+             }
+     </style>
+ </head>
+ <body>
+     <div class="container">
+         <main id="contents">
+             <header class="main-header">
+                 <section class="showcase-area" id="showcase">
+                     <h1 class="title">Danny bibimbap </h1>
+             </header>
+         <!-- Buttons -->
+         <div class="middle ">
+             <h2 id="table-number" style="font-size:20px;">桌號:</h2>
+             <a href="../free_choice_page/free-choice-page.html"class="btn-50"style= "top: 60px;right:25px;left: -30;">自由配<br>BYOB</a>
+             <a href="../package_page/package-page.html"class="btn-50" style="top: 60px; right: 26px; left: -10px;">套餐<br>Sets</a>
+             <a href="../drinks_page/drinks-page.html"class="btn-50" style="top: 60px; right: 27px; left: -10;padding-right: 12px;">飲料<br>Drinks</a>
+         </div>
+ 
+         <hr color="#fff" size="2"  width="100%"  style="margin-top: 150px;">  
+ 
+           <h2 style="color:#fff;font-size:25px;margin-top: 10px;margin-left: 10px;">飲料drinks</h2>
+           <p style="color:#fff;font-size:18px;;font-family:Microsoft JhengHei;margin-left: 5px;">
+             使用用天然水果及好茶葉
+             </p>
+             <p style="color:#fff;font-size:18px;;font-family:Microsoft JhengHei;margin-left: 5px;">
+             非基因改造黃豆製作而成
+             </p>
+  
+         <main>
+             <div class="carousel-container" >
+ 
+ 
+                 <button class="rounded-icon-btn"style="margin-top: 60px;"onclick="window.location.href='black_tea/black tea.html';">
+                     <div class="carousel">
+                     <img style="width:300px;height:185px;"src="img/black tea.png" alt="無糖紅茶圖示";>
+                     <div style=" color: #fff; font-size: 20px;">無糖紅茶$25 </div>
+                     <p style=" font-size: 19px;">選用南投魚池紅茶<br>清香餘韻</p>
+                     <p style="font-size: 19px;margin-bottom: 40px;">500ml / 0kcal</p>
+                     <i class="fas fa-shopping-cart"></i>
+                 </button>
+ 
+                 <button class="rounded-icon-btn" style="margin-top: 60px;" onclick="window.location.href='four_seasons_spring/four%20seasons%20spring.html';">
+                     <img style="width:300px;height:185px;" src="img/tea.png" alt="四季春冷泡茶圖示">
+                     <div style=" color: #fff; font-size: 20px;">四季春冷泡茶$38</div>
+                     <p style=" font-size: 19px;">選用南投名間松柏嶺青茶<br>花香明顯 甘甜好入喉</p>
+                     <p style=" font-size: 19px;margin-bottom: 40px;">500ml / 0kcal </p>
+                     <i class="fas fa-shopping-cart"></i>
+                 </button>
+ 
+                 <button class="rounded-icon-btn"style="margin-top: 60px;"onclick="window.location.href='yuxiangqing/Yuxiangqing.html';">
+                     <img  style="width:300px;height:185px;" alt="柚香清茶圖示" src="img/Yuxiangqing.png" >
+                     <div style="margin-top: 0px;color: #fff;font-size: 20px;margin-bottom: 20px;margin-bottom: 0px;">柚香清茶$38</div>
+                     <p style=" font-size: 19px;"> 韓國柚子醬搭松柏嶺青茶<br>茶順口回甘柚醬清爽酸甜</p>
+                     <p style=" font-size: 19px;margin-bottom: 40px;"> 500ml / 70kcal </p>
+                     <i class="fas fa-shopping-cart"></i>
+                 </button>
+ 
+                 <button class="rounded-icon-btn"style="margin-top: 60px; margin-bottom:160px;"onclick="window.location.href='soy_milk/soy%20milk.html';">
+                     <img  style="width:300px;height:185px;"alt="無糖豆漿圖示" src="img/soy milk.png" >
+                     <div style="margin-top: 0px;color: #fff;font-size: 20px;">無糖豆漿$20</div>
+                     <p style=" font-size: 19px;"> 使用台糖非基改黃豆<br>不含防腐劑安心又健康</p>
+                     <p style=" font-size: 19px;margin-bottom: 40px;"> 500ml / 0kcal </p>
+                     <i class="fas fa-shopping-cart"></i>
+                 </button>
+             </div>
+         </main>
+
+         <div class="cart-wrap">
+             <div id="checkout-total">        
+             <p style="margin-top: 10px; color:#fff; font-size:25px; left: 10px; top:0px;">總金額: $<span id="product-price">120</span></p>
+             <div class="button-group">  
+             <button id="add-to-cart" onclick="addToCart()"style="margin-bottom:10px;margin-left: 210px;">加入購物車</button>
+             <button onclick="viewCart()" style="margin-left: 210px;margin-bottom: 17px">查看購物車</button>
+         </div>
+         </div>
+ 
+         <div style="display: flex;">
+             <!-- 背景遮罩 -->
+             <div id="modal-overlay" class="modal-overlay"></div>
+ 
+             <!-- 購物車模態框 -->
+             <div id="cart-modal" style="display: none; left: 827px;">
+                 <div class="modal-content">
+                     <span class="close" onclick="closeModal('cart')">×</span>
+                     <h2 style="color: #000;">購物車</h2>
+                     <div id="cart-items"></div>
+                     <div id="initial-amount" style="color: #000;">初始金額: $<span
+                             id="initial-amount-value">120</span></div>
+                     <button onclick="openCheckout()">結帳</button>
+                     <button onclick="removeAllItems()">清空購物車</button>
+                 </div>
+             </div>
+ 
+                <!-- 背景遮罩 -->
+                <div id="modal-overlay" class="modal-overlay"></div>
+ 
+                <!-- 購物車模態框 -->
+                <div id="cart-modal" style="left: 827px;">
+                    <div class="modal-content" style="display: block;width: 358px;left: 438.889px;">
+                        <span class="close" onclick="closeModal('cart')">×</span>
+                        <h2>購物車</h2>
+                        <div id="cart-items">
+                            <div class="cart-item">base: 生菜</div>
+                            <div class="cart-item">protein: 雞肉</div>
+                            <div class="cart-item">condiment: 小黃瓜</div>
+                            <div class="cart-item">sauce: 泰式酸辣醬</div>
+                            <div class="cart-item">sprinkle: 海苔</div>
+                        </div>
+                        <button onclick="openCheckout()">結帳</button>
+                        <button onclick="removeAllItems()">清空購物車</button>
+                        <div id="initial-amount">初始金額: $<span id="initial-amount-value">120</span></div>
+                    </div>
+                </div>
+    
+                <!-- 結帳模態框 -->
+                <div id="checkout-modal" style="left: 827px; display: none;">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('checkout')">×</span>
+                        <h2>結帳</h2>
+                        <div id="checkout-items">
+                            <strong>base：</strong><br>
+                            <div>生菜</div><br><strong>protein：</strong><br>
+                            <div>鮭魚(+70)</div><br><strong>condiment：</strong><br>
+                            <div>花椰菜</div><br><strong>sauce：</strong><br>
+                            <div>墨西哥辣醬</div><br><strong>sprinkle：</strong><br>
+                            <div>核桐麥</div><br>
+                        </div>
+                        <button onclick="confirmCheckout()">確認訂購</button>
+                    </div>
+                </div>
+    
+                <div id="notification"></div>
+ 
+     </div>
+ 
+     <script>
+        // 頁面載入時顯示桌號
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableNumber = localStorage.getItem('tableNumber') || '1';
+            document.getElementById('table-number').textContent = '桌號:' + tableNumber;
+        });
+ 
+         // 載入訂單數據
+           fetch('get-orders.php')
+                 .then(response => response.json())
+                 .then(data => {
+                     const orderListBody = document.querySelector('#orderList tbody');
+                     data.forEach(order => {
+                         const orderRow = document.createElement('tr');
+                         orderRow.innerHTML = `
+                             <td>${order.customerName}</td>
+                             <td>${order.customerPhone}</td>
+                             <td>${order.startDateTime}</td>
+                             <td>${order.endDateTime}</td>
+                             <td>${order.orderStatus}</td>
+                             <td>${order.menuChoices}</td>
+                         `;
+                         orderListBody.appendChild(orderRow);
+                     });
+                 })
+                 .catch(error => {
+                     console.error('取得訂單資料失敗:', error);
+                 });
+     
+     
+             let currentIndex = 0;
+             let startY = 0;
+             const carousel = document.querySelector('.carousel');
+             const buttonHeight = document.querySelector('.rounded-icon-btn').offsetHeight + 10; // 按鈕高度和間距
+             const visibleButtons = Math.floor(document.querySelector('.carousel-container').offsetHeight / buttonHeight);
+             const totalButtons = document.querySelectorAll('.rounded-icon-btn').length;
+     
+             carousel.addEventListener('touchstart', (e) => {
+                 startY = e.touches[0].clientY;
+             });
+     
+             carousel.addEventListener('touchend', (e) => {
+                 const endY = e.changedTouches[0].clientY;
+                 const distance = endY - startY;
+     
+                 if (distance < -30 && currentIndex < totalButtons - visibleButtons) {
+                     currentIndex++;
+                 } else if (distance > 30 && currentIndex > 0) {
+                     currentIndex--;
+                 }
+     
+                 carousel.style.transform = `translateY(-${currentIndex * buttonHeight}px)`;
+             });
+                 </script>
+     
+         <script>
+             let totalPrice = 120;  // 定義初始價格
+             const selectedItems = {  
+                 "base": [],         //儲存用戶選擇的結構
+                 "protein": [],      //selectedItems 物件
+                 "condiment": [],    //sprinkledj 空陣列 :用於存儲每種類別中用戶選擇的項目
+                 "sauce": [],
+                 "sprinkle": []
+             }
+              
+             
+         function clearCheckboxes() {  //清除頁面上所有的勾選項目
+             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {  //重置選項和總價，使用戶可以重新選擇餐點內容
+                 checkbox.checked = false;
+             });   
+             selectedItems = {
+                 base: [],
+                 protein: [],
+                 condiment: [],
+                 sauce: [],
+                 sprinkle: []
+             };
+             updatePrice(); // Ensure the price is updated after clearing
+         }
+     
+         function isChecked(optionType, choice) { //檢查特定選項choice是否已被選取，並返回設定選中的狀態
+     
+             return selectedItems[optionType].includes(choice) ? 'checked' : '';  //確保當用戶重新加載頁面或在編輯模式下打開表單時
+         }                                                                        //，已選項目自動顯示為選中狀態
+     
+         function updateSelection(optionType, checkbox) {   //定義了每個類別的最大可選擇項目數量
+             const maxSelections = {
+                 base: 1,
+                 protein: 1,
+                 condiment: 5,
+                 sauce: 1,
+                 sprinkle: 2                      //選擇項目的動態管理，控制選擇的數量並即時反映到價格計算上，使得用戶體驗更流暢且直觀
+             };
+     
+             if (checkbox.checked) {
+                 if (selectedItems[optionType].length >= maxSelections[optionType]) {  //檢查是否超過最大限制
+                     alert(`最多只能選擇${maxSelections[optionType]}個${optionType}`); 
+                     checkbox.checked = false;
+                 } else {
+                     selectedItems[optionType].push(checkbox.value);
+                 }
+             } else {
+                 const index = selectedItems[optionType].indexOf(checkbox.value);  //查找該選項的索引
+                 if (index > -1) {
+                     selectedItems[optionType].splice(index, 1); //處理取消選擇情況
+                 }
+             }
+     
+             updatePrice();
+         }
+        
+          
+             // Fetch sales data from backend
+         async function fetchSalesData() {
+             try {
+                 const response = await fetch('get-sales.php');
+                 if (!response.ok) {
+                     throw new Error('Network response was not ok');
+                 }
+                 const data = await response.json();
+                 console.log('Sales data:', data.sales); // Output the sales value
+                 document.getElementById('total-sales').textContent = `Total Sales: $${data.sales}`;  // Display the sales on the page
+             } catch (error) {
+                 console.error('Error fetching sales data:', error);
+             }
+         }     
+     
+             function showNotification() {   //用戶成功將商品加入購物車後顯示一個通知消息。以下是這個函數的詳細解釋
+                 const notification = document.getElementById('notification'); //顯示消息的區域
+                 notification.innerHTML = '商品已加入購物車！'; //用戶將商品加入購物車時所顯示的消息
+                 notification.style.display = 'block';
+                 setTimeout(() => {
+                     notification.style.display = 'none'; //延遲執行一個函數。這個函數會在 2000 毫秒（即 2 秒）後執行
+                 }, 2000);
+             }
+     
+             function updatePrice() {    //計算選定商品的總價格
+                 console.log(selectedItems)     //輸出當前用戶選定的所有項目，以便於調試和跟踪當前的選擇
+                 for (const option in selectedItems) {
+                     selectedItems[option].forEach(item => {
+                         console.log('extraCostsitem:', extraCosts[option])
+                         console.log(item)
+                         extraCostsPrice = extraCosts[option].filter((extraCostsItem)=>extraCostsItem.id == item) //計算額外費用
+                         console.log(extraCostsPrice)
+                     if (extraCostsPrice.length){
+                             console.log(totalPrice)  // 輸出當前總價格，然後使用
+                             console.log(extraCostsPrice[0]) // 輸出找到的額外費用項目
+                             totalPrice += extraCostsPrice[0].extraPrice;
+                         }
+                     });
+                 }
+                 console.log('updatePrice', totalPrice);
+                 document.getElementById('product-price').textContent = `${totalPrice}`; //在控制台中打印出当前的总金额
+             }
+     
+             function addToCart() {   //商品添加到购物车保存到浏览器的 localStorage 用户刷新页面后仍能查看购物车内容
+                 let cart = [];  
+                 console.log(localStorage.getItem('cart')) || [];
+                 const existingItem = cart.find(item => JSON.stringify(item.product) === JSON.stringify(selectedItems)); //检查购物车中是否已有与当前选择的 selectedItems 内容相同的商品
+                 if (localStorage.getItem('cart')){
+                     cart = JSON.parse(localStorage.getItem('cart')) //检查 localStorage 中是否已存储了 cart
+                 }
+     
+                 cart.push({id: cart.length+1, product: selectedItems, price: totalPrice, amount: 1})
+                 localStorage.setItem('cart', JSON.stringify(cart));
+                 selectedItems.base=[];
+                 selectedItems.protein=[];
+                 selectedItems.condiment=[];
+                 selectedItems.sauce=[];
+                 selectedItems.sprinkle=[];
+     
+                 showNotification("商品已加入購物車！");
+             }
+     
+             function viewCart() {               //显示购物车内容
+                 // localStorage 裡購物車的項目
+                 let cart = [];
+                 if (localStorage.getItem('cart')){
+                     cart = JSON.parse(localStorage.getItem('cart'))
+                 }
+     
+                 const cartItemsDiv = document.getElementById('cart-items');
+                 
+                 if (cart.length) {    //检查 cart 数组是否有内容
+                     let itemStr = '<div>' //itemStr 建购物车内容的字符串变量
+     
+                     cart.forEach((item)=>{
+                         console.log(item)
+                         id = item.id;
+                         let prod = item.product;
+                         
+                         for (const element in prod) {
+                             prod[element].forEach((chooseItem)=>{
+                                 itemStr+=chooseItem
+                             })
+                         }
+                         itemStr+=`<span class="remove-button" onclick="removeCartItem('${id}')">移除</span>`
+                     })
+                     itemStr+='</div>'
+     
+                 
+                     cartItemsDiv.innerHTML = itemStr   //构建好的购物车内容 (itemStr) 插入到页面中
+                 } else {
+                     cartItemsDiv.innerHTML = '還沒有加入商品';
+                 }
+     
+                 console.log(totalPrice)
+             
+                 openModal('cart');
+             }
+     
+            //后端获取菜单数据并将其显示在前端页面上
+         async function fetchMenuData() {
+             try {
+                 const response = await fetch('get-menu-data.php');
+                 if (!response.ok) {
+                     throw new Error('網絡響應不是 OK');
+                 }
+                 const data = await response.json();
+              displayMenuData(data);
+             } catch (error) {
+                 console.error('獲取菜單數據時發生錯誤:', error);
+             }
+         }
+     
+         // 顯示菜單數據的函數
+         function displayMenuData(data) {
+             const menuContainer = document.getElementById('menu-container');
+             menuContainer.innerHTML = ''; // 清空容器
+         // 顯示套餐選擇
+         data.SetMeals.forEach(menu => {
+                 const menuItem = document.createElement('div');
+                 menuItem.className = 'menu-item';
+                 menuItem.innerHTML = `
+                     <h2>${menu.MenuName}</h2>
+                     <img src="${menu.Image}" alt="${menu.MenuName}">
+                     <p>價格: ${menu.Price} 元</p>
+                     <p>蛋白質: ${menu.ProteinChoices.join(', ')}</p>
+                     <p>配菜: ${menu.SideChoices.join(', ')}</p>
+                     <p>醬料: ${menu.SauceChoices.join(', ')}</p>
+                     <p>灑料: ${menu.SprinkleChoices.join(', ')}</p>
+                 `;
+                 menuContainer.appendChild(menuItem);
+             });
+         // 顯示自選內容和飲料選擇（如果需要）
+             // 這裡可以添加代碼來顯示 CustomOptions 和 Drinks
+         }
+     
+         // 在頁面加載時獲取菜單數據
+         document.addEventListener('DOMContentLoaded', fetchMenuData);
+  
+         //購物車的刪除、結賬流程、模態框的打開和關閉，以及單選項的選擇效果
+     
+             function removeCartItem(cartId) {    //removeCartItem 用于从购物车中移除指定的商品
+                 console.log(cartId)              // console.log 输出信息
+                 let cart = [];
+                 console.log(localStorage.getItem('cart'))  // getItem 瀏覽器的存儲中獲取指定鍵的值
+                 if (localStorage.getItem('cart')){
+                     cart = JSON.parse(localStorage.getItem('cart'))   //JSON.parse 轉化為 JavaScript 
+                 }
+                 cart = cart.filter(item=>item.id != cartId);       //filter 允許你根據條件篩選出符合条件的元素，
+                 localStorage.setItem('cart', JSON.stringify(cart));
+     
+             }
+             function removeItem(type, item) {   //  removeIte删除特定類型的選項    //  type  操作的商品類別 // item 移除的商品項
+                 if (index > -1) {               //查找 item 位置   //找不到则返回 -1
+                     selectedItems[type].splice(index, 1);
+                 }
+                 viewCart();
+             }
+             // removeAllItems 清空所有選項
+             function removeAllItems() {                         
+                 for (const type in selectedItems) {
+                     selectedItems[type] = [];
+                 }
+                 viewCart();
+             }
+         
+             function openCheckout() {   //openCheckout  生成結帳頁面的内容，展示所有已選商品，并打開結帳窗口
+                 const checkoutItemsDiv = document.getElementById('checkout-items');
+                 checkoutItemsDiv.innerHTML = '';
+                 for (const type in selectedItems) {
+                     if (selectedItems[type].length > 0) {
+                         const items = selectedItems[type].map(item => `<div>${item}</div>`).join('');
+                         checkoutItemsDiv.innerHTML += `<strong>${type}：</strong><br>${items}<br>`;
+                     }
+                 }
+                 openModal('checkout');
+             }
+     
+             async function confirmCheckout() {
+                const name = prompt("請輸入姓名");
+                const phone = prompt("請輸入電話");
+
+                if (!name || !phone) {
+                    alert('姓名與電話為必填項目！');
+                    return;
+                }
+
+                let cart = [];
+                if (localStorage.getItem('cart')) cart = JSON.parse(localStorage.getItem('cart'));
+                if (cart.length === 0) {
+                    alert('購物車是空的！');
+                    return;
+                }
+
+                const last = cart[cart.length - 1];
+                const totalAmount = last.price;
+                const tableNumber = localStorage.getItem('tableNumber') || '1';
+
+                const orderData = {
+                    name: name,
+                    phone: phone,
+                    startTime: new Date().toISOString(),
+                    endTime: new Date(Date.now() + 30 * 60000).toISOString(),
+                    status: "未處理",
+                    tableNumber: tableNumber,
+                    menuItems: [last],
+                    totalPrice: totalAmount
+                };
+
+                try {
+                    const response = await fetch('/ouo/submit-order.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(orderData)
+                        });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        alert('訂單已成功送出！');
+                        removeAllItems();
+                        closeModal('cart');
+                        closeModal('checkout');
+                    } else {
+                        alert('訂單送出失敗：' + (result.message || '請稍後再試。'));
+                    }
+                } catch (error) {
+                    console.error('送出訂單時發生錯誤:', error);
+                    alert('網路或伺服器錯誤，請稍後再試。');
+                }
+            }
+     
+             function openModal(modalId) { 
+                 const modal = document.getElementById(modalId + '-modal');
+                 modal.style.display = 'block';
+             } 
+                                                                             /// openModal
+             function closeModal(modalId) {                                               //打開和關閉模態框
+                 const modal = document.getElementById(modalId + '-modal');  // closeModal
+                 modal.style.display = 'none';
+             }
+             document.querySelectorAll('.option-container').forEach(option => {  // querySelectorAll 批量操作
+                 option.addEventListener('click', function () {                  // ption-container 單選選項點擊事件監聽
+                     // Remove 'active' class from all options
+                     document.querySelectorAll('.option-container').forEach(item => item.classList.remove('active'));
+     
+                     // Add 'active' class to the clicked option
+                     this.classList.add('active');
+     
+                     // Select the radio input inside the clicked option
+                     const radioInput = this.querySelector('input[type="radio"]');
+                     if (radioInput) {
+                         radioInput.checked = true;
+                     }
+                 });
+             });
+     
+             // Send order to PHP backend (submit-order.php)
+             async function submitOrder() {
+             const orderData = {
+                 name: document.getElementById('customerName').value,
+                 phone: document.getElementById('customerPhone').value,
+                 startTime: document.getElementById('startDateTime').value,
+                 endTime: document.getElementById('endDateTime').value,
+                 status: document.getElementById('orderStatus').value,
+                 menuItems: getSelectedMenuItems()
+             };
+     
+             if (!validateOrderData(orderData)) {
+                 alert('請填寫所有必需的字段');
+                 return;
+             }
+     
+             try {
+                 const response = await fetch('submit-order.php', {
+                     method: 'POST',
+                     headers: { 'Content-Type': 'application/json' },
+                     body: JSON.stringify(orderData)
+                 });
+     
+                 const result = await response.json();
+                 
+                 if (result.success) {
+                     alert('訂單提交成功！');
+                     clearForm();
+                     loadOrders();
+                 } else {
+                     alert('訂單提交失敗：' + result.message);
+                 }
+             } catch (error) {
+                 console.error('提交訂單時發生錯誤：', error);
+                 alert('提交訂單時發生錯誤，請稍後重試');
+             }
+         }
+                 
+     </script>
+</body>
+</html>

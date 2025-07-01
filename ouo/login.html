@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>丹尼夏威夷拌飯</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 添加 Google 字體 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">丹尼夏威夷拌飯</div>
+            <div class="menu" style="position: absolute; right: 20px; top: 20px;">
+                <a href="#" id="menu-toggle">登入</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="content">
+            <h1>大標題與說明</h1>
+            <p>省去複雜的流程，讓您能夠迅速享用美食</p>
+            <div class="buttons">
+                <a href="#" class="btn btn-secondary">了解更多</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模態框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <!-- 管理介面標題 -->
+            <h2>Login</h2>
+
+            <!-- 設置表單的 action 屬性為 login.php -->
+            <form name="form1" method="post" action="login.php" id="form1">
+                <label for="txtInterID">帳號</label>
+                <input name="txtInterID" type="text" id="txtInterID" class="form-control" required />
+                <label for="txtInterPassword">請輸入密碼：</label>
+                <input name="txtInterPassword" type="password" id="txtInterPassword" class="form-control" required />
+                <button type="submit" class="btn btn-primary">登入</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- 這裡是你的 JavaScript 代碼 -->
+    <script>
+        // 選單按鈕和模態框元素
+        const menuToggle = document.getElementById('menu-toggle');
+        const loginModal = document.getElementById('login-modal');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // 點擊登入顯示模態框
+        menuToggle.addEventListener('click', function () {
+            loginModal.style.display = 'flex';
+        });
+
+        // 點擊關閉按鈕隱藏模態框
+        closeBtn.addEventListener('click', function () {
+            loginModal.style.display = 'none';
+        });
+
+        // 點擊模態框外部隱藏模態框
+        window.addEventListener('click', function (e) {
+            if (e.target == loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+
+        document.getElementById('form1').addEventListener('submit', function () {
+            console.log('Form is being submitted');
+        });
+    </script>
+</body>
+
+</html>

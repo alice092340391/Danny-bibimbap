@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品主頁</title>
+    <style>
+        /* 全局樣式 */
+ 
+         @font-face {
+             font-family: Lemon-Regular;
+             src: url(Lemon-Regular.ttf) format("opentype");
+         }
+ 
+         *,
+         *::after,
+         *::before {
+             box-sizing: border-box;
+             margin: 0px;
+         }
+ 
+         a {
+             text-decoration: none
+         }
+ 
+         a:hover {
+             text-decoration: none
+         }
+ 
+         .html {
+             font-size: 62.5%;
+         }
+        * {
+             margin: 0;
+             padding: 0;
+             box-sizing: border-box;
+         }
+ 
+         body {
+             font-family: "Lemon", serif;
+             font-weight: 400;
+             font-style: normal;
+             padding: 0;
+             display: inline;
+             background-attachment: fixed;
+         }
+ 
+         .container {
+             width: 100%;
+             max-width: 1520px;
+             margin: auto;
+             padding: 20px;
+             margin-left: 0px;
+             padding-left: 0px;
+             margin-right: 0px;
+             padding-right: 0px;
+             padding-top: 0px;
+             position: relative;  
+ 
+ 
+         }
+ 
+         
+         #contents {
+             width: 100%; /* 撐滿整個容器 */
+             height:1000px;
+             background: #1C4425;
+             padding: 20px; /* 內邊距 */
+             padding-top: 0px;
+             padding-left: 0px;
+             padding-right: 0px;
+             
+         }
+ 
+           .main-header{
+         height:50px;
+ 
+         }
+ 
+ 
+         .showcase-area {
+             height: 138px;
+             background-size: cover;
+             background-position: center;
+             background-repeat: no-repeat;
+ 
+         }
+ 
+         .showcase-container {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             height: 315px;
+             font-size: 1.4rem;
+             font-weight: bold;
+             margin-bottom: 829px;
+         }
+ 
+ 
+         .title {
+ 
+         background-color: #333 ;
+         background-size: cover; /* 確保背景圖片覆蓋整個區域 */
+         color: #fff;
+         margin: 0;
+         font-size: 2rem;
+         height: auto; /* 自適應高度 */
+         padding: 10px 0; /* 內邊距確保文字有空間 */
+         line-height: 35px;
+         text-align: center;
+         font-size: 20px;
+         border-top-width: 20px;
+         padding-top: 10px;
+         border-top-width: 20px;
+         padding-top: 10px;
+         padding-left: 3px;
+ 
+         }
+ 
+ 
+ 
+         /* Menu Section */
+ 
+           .middle  {
+                 color: #fff;
+                 display: flex;
+                 align-items: center;
+                 gap: 1rem; /* Space between buttons */
+                 padding: 1rem;
+                 position: fixed;
+                 top: 30px;
+                 left: 47%;
+                 transform: translateX(-49%);
+                 z-index: 1000;
+                 width: 100%;
+                 justify-content: space-around;
+                 position: absolute;
+                 }
+             
+                 .carousel-container {
+                 display: flex;
+                 flex-wrap: wrap;
+                 gap: 1rem;
+                 justify-content: center;
+                 padding: 2rem 0;
+                 padding-top: 0px;
+ 
+             }
+             .carousel-item {
+                 width: 100%;
+                 max-width: 200px;
+                 text-align: center;
+                 overflow-y: auto; /* 開啟垂直滾動條 */
+                 scroll-behavior: smooth; /* 平滑滾動效果 */
+                 -webkit-overflow-scrolling: touch; /* 啟用移動裝置上的平滑滾動 */
+             }
+ 
+                 .carousel-container::-webkit-scrollbar {
+             display: none; /* 隱藏滾動條（適用於 Chrome、Safari） */
+             }  
+ 
+             .carousel-item img {
+                 width: 100%;
+                 height: auto;
+                 border-radius: 10px;
+             }
+ 
+             .rounded-icon-btn {
+             background-color: transparent; /* 無背景色 */
+             border: 2px solid #fff;        /* 白色邊框 */
+             border-radius: 15px;           /* 圓角 */
+             color: #fff;                   /* 圖示顏色 */
+             width: 203.2px;                 /* 按鈕寬度 */ 
+             height: 183.2px;               /* 按鈕高度 */ 
+             margin-top: 80px;
+             margin-left: 76px;
+             margin-right: 75px;                /* 按鈕高度 */
+             align-items: center;
+             justify-content: center;
+             cursor: pointer;               /* 點擊效果 */
+             font-size: 1.5em;              /* 圖示大小 */
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+         }
+ 
+             .rounded-icon-btn img {
+             width: 120px;                   /* 圖片寬度佔滿按鈕 */
+             height: 120px;                  /* 圖片高度佔滿按鈕 */
+             border-radius: 15px;           /* 圖片圓角 */
+ 
+         }
+    
+         #cart-modal,
+             #checkout-modal {
+             display: none;
+             position: absolute;
+             z-index: 999;
+             /* 設置較高的 z-index 確保模態框覆蓋所有內容 */
+             left: 50%;
+             top: 50%;
+             transform: translate(-50%, -50%);
+             width: 360px;
+             /* 模態框寬度 */
+             height: 400px;
+             /* 高度根據內容調整 */
+             background-color: white;
+             /* 背景顏色 */
+             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+             /* 加入陰影 */
+             padding: 20px;
+             /* 內邊距 */
+             border-radius: 8px;
+             /* 邊角圓滑 */
+             overflow: auto;
+             background-color: rgba(0, 0, 0, 0.5);
+             padding-top: 60px;
+             left: 180px;
+             width: 350px;
+ 
+ 
+         }
+ 
+ 
+             /* Modal Styles */
+             .modal-content {
+                 background-color: #fefefe;
+                 margin: auto;
+                 padding: 10px;
+                 border: 1px solid #888;
+                 width: 100%;
+                 height: 100%;
+                 overflow: auto;
+             }
+ 
+             .modal-overlay {
+                 display: none;
+                 position: fixed;
+                 top: 0;
+                 left: 0;
+                 width: 100%;
+                 height: 100%;
+                 background-color: rgba(0, 0, 0, 0.5);
+                 z-index: 998;
+             }
+ 
+             .close {
+                 color: #aaa;
+                 float: right;
+                 font-size: 28px;
+                 font-weight: bold;
+             }
+ 
+             .close:hover,
+             .close:focus {
+                 color: black;
+                 text-decoration: none;
+                 cursor: pointer;
+             }
+ 
+ 
+             .cart-item {
+             margin-bottom: 10px;
+             color: black;
+         }
+ 
+             .cart-items-container {
+                 max-height: 200px;
+                 /* 限制高度以便滾動 */
+                 overflow-y: auto;
+                 /* 允許垂直滾動 */
+                 margin-bottom: 10px;
+                 /* 提供一些底部間距 */
+             }
+ 
+             .remove-button {
+                 color: red;
+                 cursor: pointer;
+             }
+ 
+ 
+ 
+ 
+             .button {
+                 position: absolute;
+                 background-color: #FCCB29;
+                 border-radius: 10px;
+                 font-weight: 900;
+                 padding: 10px 20px;
+                 border: none;
+                 cursor: pointer;
+                 display: block;
+                 margin-bottom: 10px; 
+                 top: 10px; /* 調整按鈕的位置 */  
+                 left: 10px; /* 調整按鈕的位置 */  
+                 z-index: 0; /* 設定 z-index，確保在長方形後面 */
+             }  
+ 
+              
+             /* Notification Styles */
+             #notification {
+                 display: none;
+                 position: fixed;
+                 top: 20px;
+                 right: 20px;
+                 background-color: #28a745;
+                 color: white;
+                 padding: 10px;
+                 border-radius: 5px;
+                 z-index: 1000;
+             }
+ 
+             .options-container {
+             margin-left: 20px;
+             /* Add space between the interactive container and the options */
+             }
+ 
+ 
+ 
+ 
+             button {
+                 border-radius: 10px;
+                 font-weight: 900;
+                 padding: 10px 20px;
+                 border: none;
+                 cursor: pointer;
+                 display: block;
+                 /* 確保按鈕顯示 */
+                 /* 保證按鈕位於前面 */
+                 margin-bottom: 10px;
+                 background-color: #FCCB29;
+                 COLOR: #FFF;
+                 BORDER-COLOR: #FFF;
+                 border: 2px solid #fff
+ 
+             }
+ 
+             .cart-wrap {  
+             position: fixed;  
+             background-size: cover;  
+             bottom: 0; /* 固定在螢幕底部 */  
+             left: 0;  
+             width: 100%; /* 讓寬度滿版 */  
+             background-color: #333;  
+             color: white;  
+             text-align: center;  
+             display: flex;  
+             justify-content: flex-end; /* 右对齐 */  
+             align-items: flex-start; /* 向上对齐 */  
+             padding: 10px 20px; /* 預設內邊距 */  
+             z-index: 1;  
+             flex-direction: column; /* 改为垂直排列 */  
+         }  
+ 
+ 
+                 #checkout-total {  
+                 width: 100%; /* 确保宽度适应 */  
+                 text-align: left; /* 强制靠左 */
+             }  
+ 
+             .button-group {  
+                 display: flex; /* 使用flex排列按钮 */  
+                 flex-direction: column; /* 垂直排列按钮 */  
+                 align-items: flex-end; /* 右对齐按钮 */  
+                 margin-top: 10px; /* 按钮之间的间距 */  
+                 margin-top: 0px;
+             }  
+ 
+             .cart-button{
+ 
+                 margin: 5px; /* 按钮之间的间距 */  
+                 padding: 15px 0; /* 按钮内边距，确保按钮高度一致 */  
+                 width: 200px; /* 固定宽度，以确保按钮尺寸一致 */  
+                 background-color: yellow; /* 按钮背景颜色 */  
+                 border: none; /* 去掉边框 */  
+                 border-radius: 5px; /* 圆角按钮 */  
+                 cursor: pointer; /* 鼠标悬停为手型 */  
+                 font-size: 16px; /* 按钮字体大小 */  
+                 text-align: center; /* 确保文本居中 */  
+ 
+                 }
+         
+ 
+             .cart-button:hover {  
+                 background-color: #f0c040; /* 悬停效果 */  
+             }   
+ 
+ 
+  
+              
+             .footer {
+              text-align: center;
+              font-size: 1.8rem;
+              padding: 1.6rem;
+              font-weight: 500;
+              color: #fff;
+              background: #014e2a;
+              bottom: 0;
+              width: 352px;
+              border: solid 2px;
+              left: 650px;
+              border-bottom-width: 3px;
+              border-right-width: 0px;
+              border-left-width: 0px;
+              }
+     
+ 
+ 
+ 
+                 .interactive-container {
+              display: inline-block;
+              vertical-align: top;
+              width: 50%; /* Adjust width if necessary */
+              padding: 20px;
+              box-sizing: border-box;
+              width: 140px;
+              height: 267px;
+              border-radius: 15px;
+              background-color: #fff;
+              overflow: hidden;
+              z-index: 1000;
+              margin: 20px;
+              margin-left: 5px;
+              z-index: 1;
+              /* 設置較低的 z-index，確保模態框能覆蓋它 */
+              margin-left: 10px;
+              padding-left: 0px;
+          }
+  
+          .result.options-container {
+              display: inline-block;
+              vertical-align: top;
+              width: 40%; /* Adjust width to match the layout */
+              padding: 20px;
+              margin-left: 5%;
+              box-sizing: border-box;
+              color: #fff;
+              border-radius: 8px;
+              width: 190px;
+              margin-left: 0px;
+          }
+  
+          .option-container {
+              display: flex;
+              align-items: center;
+              margin-bottom: 10px;
+              cursor: pointer;
+              padding: 15px;
+              border-bottom: 1px solid #eee;
+              position: relative;
+              transition: background-color 0.3s ease, box-shadow 0.3s ease;
+              background-color: #ffffff;
+              width: 200px;
+              /* 固定寬度，例如 200px */
+              box-sizing: border-box;
+              /* 確保內邊距和邊框不影響寬度 */
+          }
+  
+           .option-container input[type="radio"] {
+              margin-right: 10px;
+              appearance: none;
+              -webkit-appearance: none;
+              border: 2px solid #ccc;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              margin-right: 15px;
+              outline: none;
+              cursor: pointer;
+          }
+  
+          .option-container input[type="radio"]:checked {
+                  border-color: #ffd700;
+                  background-color: #ffd700;
+              }
+  
+              .option-container label {
+                  cursor: pointer;
+                  color: #333;
+                  transition: color 0.3s ease;
+              }
+  
+              .subtext {
+                  position: absolute;
+                  right: 10px;
+                  color: #888;
+                  font-size: 14px;
+                  transition: color 0.3s ease;
+              } 
+              .result {
+                  margin-top: 10px;
+                  padding: 10px;
+                  border-radius: 5px;
+                  display: block;
+                  width: 220px;
+                  /* 設定結果區的寬度 */
+                  margin-left: 10px;
+  
+  
+              }
+  
+              .option-container .highlight {
+                 position: absolute;
+                 left: 0;
+                 width: 5px;
+                 height: 100%;
+                 background-color: transparent;
+             }
+ 
+             .option-container input[type="radio"]:checked~.highlight {
+                 background-color: #ffd700;
+             }
+ 
+             .option-container.active {
+                 transform: translateY(-5px);
+                 box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                 background-color: #000;
+                 border: 2px solid #ffd700;
+                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+                 /* Raised effect */
+             }
+ 
+             .option-container.active label,
+             .option-container.active .subtext {
+                 color: #fff;
+             }
+ 
+             .product-description {
+                 position: relative;
+                 /* 使 .product-description 成為定位參考 */
+                 width: 352px;
+                 /* 根據需要設置寬度 */
+                 height: 1100px;
+                 /* 根據需要設置高度 */
+                 text-align: left;
+                 color: #fff;
+                 font-size: 18px;
+                 background-color: #1c4425;
+                 padding: 15px;
+                 border-radius: 10px;
+                 margin-bottom: 15px;
+                 margin-top: 20px;
+                 /* 根據需要設置 */
+                 top: 200px;
+                 padding-left: 0px;
+                 padding-right: 0px;
+             }
+ 
+             .product-description h2 {
+                 font-size: 25px;
+                 margin: 0 0 10px;
+             }
+ 
+             .product-description p {
+                 margin: 0;
+             }
+      
+             /* Button styles */
+ 
+             .btn-50,
+             .btn-50 *,
+             .btn-50 :after,
+             .btn-50:after,
+             .btn-50:before {
+                 border: 0 solid;
+                 box-sizing: border-box;
+             }
+ 
+             .btn-50 {
+                 -webkit-tap-highlight-color: transparent;
+                 background-color: #000;
+                 border-width: 3px;
+                 background-image: none;
+                 color: #fff;
+                 cursor: pointer;
+                 font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+                     Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+                 font-size: 100%;
+                 line-height: 1.5;
+                 margin: 0;
+                 padding: 0;
+             }
+ 
+             .btn-50:disabled {
+                 cursor: default;
+             }
+ 
+             .btn-50:-moz-focusring {
+                 outline: auto;
+             }
+ 
+             .btn-50 svg {
+                 display: block;
+             }
+ 
+             .btn-50 [hidden] {
+                 display: none;
+             }
+             .btn-50 {
+                 background: #FCCB29;
+                 color: #ffffff;
+                 border-radius: 10px; /* Rounded corners */
+                 padding: 15px 20px;
+                 font-weight: bold;
+                 text-transform: uppercase;
+                 text-align: center;
+                 text-decoration: none; /* Remove underline */
+                 flex: 1; /* Buttons evenly share space */
+                 max-width: 200px; /* Prevent buttons from getting too large */
+                 transition: all 0.3s ease;
+                 box-sizing: border-box;
+                 display: block;
+                 font-weight: 900;
+                 perspective: 800px;
+                 position: relative;
+                 transition: transform 0.2s;
+                 padding-left: 20px;
+                 padding-bottom: 20px;
+                 padding-top: 10px;
+                 height: 70.8px;
+                 padding-right: 20px;
+                 font-size: 14px;
+             }
+ 
+             .btn-50:hover {
+                 background-color: #e0a900;
+                 transform: scale(1.05);
+                 transform: rotateX(38deg) translateY(7px);
+             }
+
+
+             .option-group {  
+            margin-top: 15px;  
+        }  
+
+        .option {  
+            display: inline-block;  
+            background-color: transparent;  
+            border: 1px solid white;  
+            border-radius: 5px;  
+            color: white;  
+            padding: 5px 10px;  
+            margin: 5px;  
+            cursor: pointer;  
+            transition: background-color 0.3s;  
+        }  
+
+        .option:hover {  
+            background-color: rgba(255, 255, 255, 0.3); /* Lighten on hover */  
+        }  
+
+        input[type="radio"] {  
+            display: none; /* Hide the default radio button */  
+        }  
+
+        input[type="radio"]:checked + .option {  
+            background-color: rgba(255, 255, 255, 0.5); /* Highlight selected */  
+        }  
+
+       
+               /* Responsive Design */
+               @media (max-width: 768px) {
+                  .menu {
+                      gap: 0.5rem; /* Reduce space between buttons for smaller screens */
+                  }
+  
+                  .btn-50 {
+                      padding: 10px 15px;
+                  }
+  
+                  .cart-wrap {
+                  padding: 10px 15px; /* 調整內邊距 */
+                  font-size: 14px; /* 字體大小調整 */
+                  }
+                  .interactive-container, .result.options-container {
+                 
+                 
+                  margin: 0;
+  
+                  }
+  
+              }
+  
+              @media (min-width: 600px) {
+                   .cart-wrap {
+                      flex-direction: column; /* 縱向排列，以便在窄螢幕上更易讀 */
+                      padding: 15px; /* 調整內邊距 */
+                      text-align: center; /* 確保文字置中對齊 */
+                  }
+                  .interactive-container, .result.options-container {
+                 
+                 
+                 margin: 0;
+  
+                 }
+                 
+              }
+  
+              @media (max-width: 480px) {
+                  .btn-50 {
+                      padding: 8px 12px; /* Adjust padding for smaller screens */
+                  }
+  
+                  .cart-wrap {
+                  padding: 8px 10px; /* 調整內邊距 */
+                  font-size: 12px; /* 字體大小調整 */
+                  flex-direction: column; /* 讓內容垂直排列 */
+                  align-items: center; /* 中央對齊 */
+                 }
+  
+                 .interactive-container, .result.options-container {
+                 
+                 
+                 margin: 0;
+  
+                 }
+  
+              }
+     </style>
+ </head>
+<body>
+    <div class="container">
+        <main id="contents">
+            <header class="main-header">
+                <section class="showcase-area" id="showcase">
+                    <h1 class="title">Danny bibimbap </h1>
+            </header>
+            <!-- Buttons -->
+            <div class="middle ">
+                <h2 id="table-number" style="font-size:20px;">桌號:</h2>
+                <a href="../../free_choice_page/free-choice-page.html" class="btn-50"style= "top: 60px;right:14px;left: -30;">自由配<br>BYOB</a>
+                <a href="../../package_page/package-page.html" class="btn-50" style="top: 60px; right: 26px; left: -10px;">套餐<br>Sets</a>
+                <a href="../../drinks_page/drinks-page.html"class="btn-50" style="top: 60px; right: 10px; left: -10;padding-right: 12px;">飲料<br>Drinks</a>
+            </div>
+
+            <hr color="#fff" size="2"  width="100%"  style="margin-top: 150px;">  
+
+            <div style="text-align: center;">  
+                <h2 style=" color:#fff;margin-top: 10px;margin-left: 10px;">四季春冷泡茶$38 </h2>
+                <img style="width:300px;height:179px;margin-left: 11px;"src="img/tea.png" alt="四季春冷泡茶圖示";>
+                <p style=" font-size: 19px; color: #fff;text-align:center;margin-bottom: 10px;margin-left: 20px;">選用南投名間松柏嶺青茶<br>花香明顯 甘甜好入喉</p>
+                <p style=" font-size: 19px; color: #fff;text-align:center;margin-left: 20px;"> 500ml / 0kcal</p>
+                <hr color="#fff" size="2" width="100%" style="margin-top:10px;">
+            </div>
+
+            <div style="text-align: center; ">  
+                <h3 style="color: #fff;margin-top: 20px;">甜度</h3>  
+                <div class="option-group" id="sweetness-options">  
+                    <label class="option">  
+                        <input type="radio" name="sweetness" value="正常"> 正常  
+                    </label>  
+                    <label class="option">  
+                        <input type="radio" name="sweetness" value="3分糖"> 3分糖  
+                    </label>  
+                    <label class="option">  
+                        <input type="radio" name="sweetness" value="無糖"> 無糖  
+                    </label>  
+                </div>  
+            
+                <h3 style="color: #fff;margin-top: 20px;">冰塊</h3>  
+                <div class="option-group" id="ice-options">  
+                    <label class="option">  
+                        <input type="radio" name="ice" value="正常"> 正常  
+                    </label>  
+                    <label class="option">  
+                        <input type="radio" name="ice" value="少冰"> 少冰  
+                    </label>  
+                    <label class="option">  
+                        <input type="radio" name="ice" value="去冰"> 去冰  
+                    </label>  
+                </div>  
+            </div>
+
+            <div class="cart-wrap">
+                <div id="checkout-total">
+                    <p style="margin-top: 10px; color:#fff; font-size:25px; left: 10px; top:0px;">總金額: $<span id="product-price">38</span></p>
+                    <div class="button-group">  
+                        <button id="add-to-cart" style="margin-bottom:10px;margin-left: 210px;">加入購物車</button>
+                        <button id="view-cart-btn" style="margin-left: 210px;margin-bottom: 17px">查看購物車</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 背景遮罩 -->
+            <div id="modal-overlay" class="modal-overlay"></div>
+
+            <!-- 購物車模態框 -->
+                <div id="cart-modal" style="display: none; left: 827px;">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('cart')">×</span>
+                        <h2 style="color: #000;">購物車</h2>
+                        <div id="cart-items"></div>
+                        <button onclick="openCheckout()">結帳</button>
+                        <button onclick="removeAllItems()">清空購物車</button>
+                    </div>
+                </div>
+                <!-- 結帳模態框 -->
+                <div id="checkout-modal" style="left: 827px; display: none;">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('checkout')">×</span>
+                        <h2>結帳</h2>
+                        <div id="checkout-items"></div>
+                        <button onclick="confirmCheckout()">確認訂購</button>
+                    </div>
+                </div>
+
+            <div id="notification"></div>
+        </main>
+    </div>
+
+    <script>
+    // 頁面載入時顯示桌號
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableNumber = localStorage.getItem('tableNumber') || '1';
+        document.getElementById('table-number').textContent = '桌號:' + tableNumber;
+    });
+
+    // 飲料選項
+    let drinkOptions = {
+        sweetness: '',
+        ice: ''
+    };
+
+    // 更新甜度和冰塊選擇
+    document.querySelectorAll('input[name="sweetness"]').forEach(input => {
+        input.addEventListener('change', () => {
+            drinkOptions.sweetness = input.value;
+        });
+    });
+
+    document.querySelectorAll('input[name="ice"]').forEach(input => {
+        input.addEventListener('change', () => {
+            drinkOptions.ice = input.value;
+        });
+    });
+
+    // 加入購物車
+    document.getElementById('add-to-cart').onclick = function() {
+        if (!drinkOptions.sweetness || !drinkOptions.ice) {
+            alert('請選擇甜度和冰塊選項！');
+            return;
+        }
+
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        const newItem = {
+            id: Date.now(),
+            product: {
+                drink: {
+                    name: "四季春冷泡茶",
+                    sweetness: drinkOptions.sweetness,
+                    ice: drinkOptions.ice
+                }
+            },
+            price: 38,
+            amount: 1,
+            tableNumber: localStorage.getItem('tableNumber') || ''
+        };
+
+        cart.push(newItem);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        showNotification('商品已加入購物車！');
+    };
+
+    // 查看購物車
+    document.getElementById('view-cart-btn').onclick = function() {
+        viewCart();
+    };
+
+    function viewCart() {
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const cartItemsDiv = document.getElementById('cart-items');
+
+        if (cart.length) {
+            let itemStr = '';
+            cart.forEach((item, index) => {
+                const drink = item.product.drink;
+                itemStr += `
+                    <div class="cart-item">
+                        ${drink.name} - $${item.price}
+                        <div>甜度: ${drink.sweetness}</div>
+                        <div>冰塊: ${drink.ice}</div>
+                        <span class="remove-button" onclick="removeCartItem(${index})">移除</span>
+                    </div>`;
+            });
+            cartItemsDiv.innerHTML = itemStr;
+        } else {
+            cartItemsDiv.innerHTML = '購物車為空';
+        }
+
+        openModal('cart');
+    }
+
+    // 移除購物車單一項目
+    function removeCartItem(index) {
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        viewCart();
+    }
+
+    // 清空購物車
+    function removeAllItems() {
+        localStorage.removeItem('cart');
+        viewCart();
+    }
+
+    // 開啟模態框
+    function openModal(modalId) {
+        document.getElementById(modalId + '-modal').style.display = 'block';
+        document.getElementById('modal-overlay').style.display = 'block';
+    }
+
+    // 關閉模態框
+    function closeModal(modalId) {
+        document.getElementById(modalId + '-modal').style.display = 'none';
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    // 顯示通知訊息
+    function showNotification(msg) {
+        const notification = document.getElementById('notification');
+        notification.innerHTML = msg;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 2000);
+    }
+
+        function openCheckout() {
+        closeModal('cart');      // 關閉購物車視窗
+        openModal('checkout');   // 打開結帳視窗
+
+        const checkoutItemsDiv = document.getElementById('checkout-items');
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        if (cart.length === 0) {
+            checkoutItemsDiv.innerHTML = '購物車是空的';
+            return;
+        }
+
+        let itemStr = '';
+        cart.forEach(item => {
+            const drink = item.product.drink;
+            itemStr += `
+                <div>
+                    ${drink.name} - $${item.price}
+                    <div>甜度: ${drink.sweetness}</div>
+                    <div>冰塊: ${drink.ice}</div>
+                </div>
+                <hr>`;
+        });
+        checkoutItemsDiv.innerHTML = itemStr;
+    }
+
+
+    // 確認結帳
+    async function confirmCheckout() {
+        const name = prompt("請輸入姓名");
+        const phone = prompt("請輸入電話");
+
+        if (!name || !phone) {
+            alert('姓名與電話為必填項目！');
+            return;
+        }
+
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        if (cart.length === 0) {
+            alert('購物車是空的！');
+            return;
+        }
+
+        // 計算總價
+        const totalAmount = cart.reduce((sum, item) => sum + item.price * (item.amount || 1), 0);
+        const tableNumber = localStorage.getItem('tableNumber') || '1';
+
+        const orderData = {
+            name: name,
+            phone: phone,
+            startTime: new Date().toISOString(),
+            endTime: new Date(Date.now() + 30 * 60000).toISOString(),
+            status: "未處理",
+            tableNumber: tableNumber,
+            menuItems: cart,
+            totalPrice: totalAmount
+        };
+
+        try {
+            const response = await fetch('/ouo/submit-order.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                alert('訂單已成功送出！');
+                removeAllItems();
+                closeModal('cart');
+                closeModal('checkout');
+            } else {
+                alert('訂單送出失敗：' + (result.message || '請稍後再試。'));
+            }
+        } catch (error) {
+            console.error('送出訂單時發生錯誤:', error);
+            alert('網路或伺服器錯誤，請稍後再試。');
+        }
+    }
+</script>
+
+</body>
+</html>

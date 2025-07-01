@@ -1,0 +1,2951 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台管理介面</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles1.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            display: flex;
+        }
+
+        .sidebar-logo {
+            padding: 18px;
+            text-align: center;
+            background-color: #9aa0a8;
+            font-size: 1.0rem;
+            font-weight: bold;
+            display: flex; /* 使圖圖片和文字并排 */
+            align-items: center; /* 垂直居中 */
+            gap: 10px; /* 圖片和文字之間的間距 */
+        }
+
+        .sidebar-logo img {
+            width: 40px; /* 寬度 */
+            height: auto; /* 保持比例 */
+        }
+
+        .navbar {
+            width: 200px;
+            background-color: #2c3e50;
+            height: 100vh;
+            position: fixed;
+            padding-top: 3px;
+        }
+
+        .navbar a,
+        .navbar button {
+            text-decoration: none;
+            color: #ecf0f1;
+            padding: 13px;
+            display: block;
+            text-align: left;
+            font-size: 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a i,
+        .navbar button i {
+            margin-right: 10px;
+        }
+
+        .navbar a:hover,
+        .navbar button:hover {
+            background-color: #34495e;
+        }
+
+        .dropdown {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown[aria-expanded="true"] .dropdown-content {
+            display: block;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .card ul,
+        .card table {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .card ul li,
+        .card table td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .card ul li:last-child,
+        .card table td:last-child {
+            border-bottom: none;
+        }
+
+        .card .menu-item {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card .menu-item img {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            height: auto;
+            max-width: 250px;
+        }
+
+        .card .menu-item h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .card .menu-item p {
+            margin-bottom: 5px;
+        }
+
+        .card .menu-item button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 150px;
+        }
+
+        .card .menu-item button:hover {
+            background-color: #45a049;
+        }
+
+        #add-dish {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #add-dish h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #add-dish-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        #add-dish-form label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        #add-dish-form input[type="text"],
+        #add-dish-form input[type="number"],
+        #add-dish-form select,
+        #add-dish-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #add-dish-form textarea {
+            resize: vertical;
+        }
+
+        #add-dish-form .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #add-dish-form .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -5px;
+            margin-left: -5px;
+        }
+
+        .form-row>.form-group {
+            padding-right: 5px;
+            padding-left: 5px;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+        }
+
+        /* 確保菜單內容容器居中 */
+        #menu-list-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* 居中對齊菜單 */
+            margin: 20px auto;
+            /* 新增外邊距以分隔其他元素 */
+            max-width: 1200px;
+            /* 設定最大寬度以防內容過寬 */
+        }
+
+        /* 選單項目卡片樣式 */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 15px;
+            width: 300px;
+            /* 可以根據需要調整寬度 */
+            text-align: center;
+        }
+
+        /* 其他元素樣式 */
+        button {
+            margin: 10px;
+            /* 新增外邊距以分隔其他元素 */
+        }
+
+        /* 避免選單內容與其他控制項重疊 */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .dashboard {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-top: auto;
+            /* 將其推到底部 */
+            background-color: #576558;
+            color: white;
+        }
+
+        .employee-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .employee-info span {
+            font-size: 14px;
+        }
+
+        .navbar a.btn.btn-danger {
+            margin-bottom: 10px;
+        }
+
+        /* 默認淺色主題 */
+        body {
+            background-color: white;
+            color: black;
+        }
+
+        /* 深色主題 */
+        .dark-theme {
+            background-color: black;
+            color: white;
+        }
+
+        #logged-in-user-info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            /* 将left改为right */
+            background-color: #7e87cb;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+
+        #employee-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        #employee-name {
+            font-size: 14px;
+        }
+
+        #category-management {
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .category-actions,
+        .category-list,
+        .category-details,
+        .delete-category {
+            margin-bottom: 20px;
+        }
+
+        /* Input fields */
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        #category-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #category-list li {
+            background-color: white;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #category-details-content {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .inventory .panel {
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+        .main-content {
+            margin-left: 0;
+            padding: 5px;
+        }
+        table {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        th, td {
+            font-size: 12px;
+            padding: 6px;
+        }
+        .navbar {
+            width: 100vw;
+            position: static;
+            height: auto;
+        }
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="sidebar-logo">
+            <img src="logle.jpg" alt="丹尼夏威夷 Logo">
+            <span>丹尼夏威夷</span>
+        </div>
+        <button id="homeButton"><i class="fas fa-home"></i>首頁</button>
+        <script>
+            if (!localStorage.getItem('lastVisitedPage')) {
+                localStorage.setItem('lastVisitedPage', window.location.href);
+            }
+
+            document.getElementById('homeButton').addEventListener('click', function () {
+                var lastVisitedPage = localStorage.getItem('lastVisitedPage');
+
+                // Validate lastVisitedPage URL
+                if (lastVisitedPage && lastVisitedPage !== 'null' && lastVisitedPage !== 'undefined') {
+                    window.location.href = lastVisitedPage;
+                }
+                else {
+                    // Provide a fallback URL
+                    window.location.href = '/home';  // Change this to your actual home URL
+                }
+            });
+        </script>
+        <div class="dropdown">
+            <button aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown('menu-dropdown')">
+                <i class="fas fa-utensils"></i> 菜單管理
+            </button>
+            <div id="menu-dropdown" class="dropdown-content">
+                <a href="#add-dish">新增菜品</a>
+                <a href="#menu-list">菜單列表</a>
+                <a href="#category-management">類別管理</a>
+                <a href="#inventory-management">庫存管理</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown('customer-dropdown')">
+                <i class="fas fa-users"></i> 客戶管理
+            </button>
+            <div id="customer-dropdown" class="dropdown-content">
+                <a href="#customer-list">客戶列表</a>
+                <!--<a href="#feedback">評價與反饋</a>-->
+            </div>
+        </div>
+        <div class="dropdown">
+            <button aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown('employee-dropdown')">
+                <i class="fas fa-user-tie"></i> 員工管理
+            </button>
+            <div id="employee-dropdown" class="dropdown-content">
+                <a href="#employee-list">員工列表</a>
+                <!--<a href="#add-employee">新增員工</a>-->
+                <!--<a href="#schedule-management">排班管理</a>-->
+            </div>
+        </div>
+        <div class="dropdown">
+            <button aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown('reports-dropdown')">
+                <i class="fas fa-chart-bar"></i> 報表與分析
+            </button>
+            <div id="reports-dropdown" class="dropdown-content">
+                <a href="#sales-report">銷售報表</a>
+                <a href="inventory.html">庫存報表</a>
+                <a href="#customer-analysis">客戶分析</a>
+                <!--<a href="#employee-performance">員工績效</a>-->
+            </div>
+        </div>
+
+        
+        
+        <div class="dropdown">
+            <button aria-haspopup="true" aria-expanded="false" onclick="showOrderManagement()">
+                <i class="fas fa-receipt"></i> 訂單管理
+            </button>
+        </div>
+        <script>
+            document.getElementById('homeButton').addEventListener('click', function () {
+                var lastVisitedPage = localStorage.getItem('lastVisitedPage');
+
+                if (lastVisitedPage && lastVisitedPage !== 'null' && lastVisitedPage !== 'undefined') {
+                    window.location.href = lastVisitedPage;
+                } else {
+                    window.location.href = '/home';  // Change this to your actual home URL
+                }
+            });
+            document.getElementById('settingsButton').addEventListener('click', function () {
+                window.location.href = '#basic-settings';
+            });
+        </script>
+        <!-- 員工信息區 -->
+        <div class="employee-info" id="logged-in-user-info">
+            <img id="employee-avatar" src="cat.png" alt="員工頭像">
+            <span id="employee-name-info">載入中...</span>
+        </div>
+
+        <!-- 登出按钮 -->
+        <a href="logout.php" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> 登出
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div id="home" class="dashboard active">
+            <div class="card">
+                <h3>今日訂單數量</h3>
+                <p>150</p>
+            </div>
+            <div class="card">
+                <h3>今日銷售額</h3>
+                <p>NT$ 45,000</p>
+            </div>
+            <div class="card">
+                <h3>新增客戶數</h3>
+                <p>5</p>
+            </div>
+            <div class="card">
+                <h3>待處理訂單</h3>
+                <p>8</p>
+            </div>
+            <div class="card">
+                <h3>銷售趨勢</h3>
+                <canvas id="salesTrend"></canvas>
+            </div>
+            <div class="card">
+                <h3>庫存水平</h3>
+                <canvas id="inventoryLevels"></canvas>
+            </div>
+            <div class="card">
+                <h3>最新訂單</h3>
+                <ul>
+                    <li>訂單 #12345 - 2 分鐘前</li>
+                    <li>訂單 #12344 - 10 分鐘前</li>
+                    <li>訂單 #12343 - 20 分鐘前</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>系統通知</h3>
+                <p>系統將於今晚 12:00 進行維護，預計 2 小時。</p>
+            </div>
+        </div>
+        <div id="add-dish" class="dashboard">
+            <h3>新增菜品</h3>
+            <form action="add_dish.php" method="POST" enctype="multipart/form-data">
+
+                <!-- 🍱 基本資訊 -->
+                <label for="dish-id">菜品編號：</label>
+                <input type="text" id="dish-id" name="dish-id" placeholder="自動生成或手動輸入" readonly><br><br>
+
+                <label for="dish-name">菜品名稱：</label>
+                <input type="text" id="dish-name" name="dish-name" required placeholder="例如：豪華波奇"><br><br>
+
+                <label for="description">描述：</label><br>
+                <textarea id="description" name="description" rows="3" placeholder="主要風味、特色和賣點"></textarea><br><br>
+
+                <label for="price">價格：</label>
+                <input type="number" id="price" name="price" step="0.01" required placeholder="例如：360"><br><br>
+
+                <label for="category">類別：</label>
+                <select id="category" name="category" required multiple>
+                <option value="main-dish">主菜</option>
+                <option value="side-dish">副菜</option>
+                <option value="soup">湯品</option>
+                </select><br><br>
+
+                <label for="dish-image">上傳圖片：</label>
+                <input type="file" id="dish-image" name="dish-image" accept="image/*" onchange="showPreview(event);" required><br><br>
+                <img id="image-preview" src="#" alt="預覽圖片" style="display: none; width: 100%; max-width: 250px;"><br><br>
+
+                <!-- 🥗 營養與成分 -->
+                <label for="calories">熱量：</label>
+                <input type="number" id="calories" name="calories" step="0.1" placeholder="每份熱量（大卡）"><br><br>
+
+                <label for="serving-size">份量：</label>
+                <input type="text" id="serving-size" name="serving-size" placeholder="例如：300g"><br><br>
+
+                <label for="ingredients">原料和配料：</label><br>
+                <textarea id="ingredients" name="ingredients" rows="3" placeholder="主要原料與配料（如鮭魚、藜麥、牛油果等）"></textarea><br><br>
+
+                <label for="main-ingredients">主成分分類：</label>
+                <select id="main-ingredients" name="main-ingredients">
+                <option value="meat">肉類</option>
+                <option value="vegetable">菜類</option>
+                <option value="grain">穀物</option>
+                <option value="dairy">乳製品</option>
+                <option value="other">其他</option>
+                </select><br><br>
+
+                <label for="nutritional-info">營養資訊：</label><br>
+                <textarea id="nutritional-info" name="nutritional-info" rows="3" placeholder="蛋白質、脂肪、碳水化合物等"></textarea><br><br>
+
+                <!-- 👥 其他資訊 -->
+                <label for="suitable-for">適合人群：</label><br>
+                <textarea id="suitable-for" name="suitable-for" rows="2" placeholder="例如：健身族群、素食者等"></textarea><br><br>
+
+                <label for="taste-description">口感描述：</label><br>
+                <textarea id="taste-description" name="taste-description" rows="2" placeholder="清爽、酥脆、濃郁等口感描述"></textarea><br><br>
+
+                <label for="supplier">供應商信息：</label>
+                <input type="text" id="supplier" name="supplier" placeholder="供應商名稱或來源地"><br><br>
+
+                <label for="allergens-list">過敏原列表：</label>
+                <select id="allergens-list" name="allergens-list" multiple>
+                <option value="peanuts">花生</option>
+                <option value="dairy">乳製品</option>
+                <option value="gluten">麩質</option>
+                </select><br><br>
+
+                <label for="dish-status">菜品狀態：</label>
+                <select id="dish-status" name="dish-status">
+                <option value="available">上架</option>
+                <option value="unavailable">下架</option>
+                </select><br><br>
+
+                <label for="discount">折扣：</label>
+                <input type="text" id="discount" name="discount" placeholder="如 10% / 買一送一"><br><br>
+
+                <label for="notes">備註：</label><br>
+                <textarea id="notes" name="notes" rows="2" placeholder="其他備註說明"></textarea><br><br>
+
+                <button type="submit">新增</button>
+            </form>
+            </div>
+
+            <script>
+            function showPreview(event) {
+            const imagePreview = document.getElementById('image-preview');
+            const file = event.target.files[0];
+            if (file) {
+                imagePreview.src = URL.createObjectURL(file);
+                imagePreview.style.display = 'block';
+            }
+            }
+            </script>
+
+
+        <div id="menu-list" class="dashboard">
+            <h3>菜單列表</h3>
+
+            <!-- 搜尋和修改菜單區塊的水平排列容器 -->
+            <div id="menu-actions" style="display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;">
+                <!-- 搜尋 -->
+                <div id="search-section" style="width: 45%;">
+                    <input type="text" id="search-input" placeholder="搜尋菜單項目">
+                    <button id="search-button">搜尋</button>
+                </div>
+
+                <!-- 編輯菜單 -->
+                <div id="update-menu-section" style="width: 45%;">
+                    <h3>編輯菜單項目</h3>
+                    <input type="number" id="update-menu-id" placeholder="菜單 ID">
+                    <input type="text" id="update-menu-name" placeholder="新菜單名稱">
+                    <input type="number" id="update-menu-price" placeholder="新價格">
+                    <button id="update-button">編輯菜單</button>
+                </div>
+                
+                <div id="update-drink-section" style="width: 45%;">
+                    <h3>編輯飲料項目</h3>
+                    <input type="number" id="update-drink-id" placeholder="飲料 ID">
+                    <input type="text" id="update-drink-name" placeholder="新飲料名稱">
+                    <input type="number" id="update-drink-price" placeholder="新價格">
+                    <button id="update-drink-button">編輯飲料</button>
+                </div>
+            </div>
+
+                <!-- 顯示菜單列表 - 菜單項目將顯示在這裡 -->
+                <div id="menu-list-content" style="margin-top: 20px;">
+                    <!-- 菜單項目將顯示在這裡 -->
+                </div>
+
+        </div>
+
+        <div id="category-management" class="dashboard">
+            <h3>類別管理</h3>
+            <form id="add-category-form">
+                <label for="category-name">類別名稱：</label>
+                <input type="text" id="category-name" name="category-name" required><br><br>
+                <input type="submit" value="新增類別">
+            </form>
+            <h4>現有類別：</h4>
+            <ul id="category-list">
+                <!-- 類別將在此動態加載 -->
+            </ul>
+
+            <!-- 用於編輯和刪除類別的部分 -->
+            <div id="edit-category">
+                <h4>編輯類別</h4>
+                <form id="edit-category-form">
+                    <label for="edit-category-name">選擇類別：</label>
+                    <select id="edit-category-select" name="edit-category-select">
+                        <!-- 編輯類別的選項將在此動態加載 -->
+                    </select><br><br>
+                    <label for="new-category-name">新類別名稱：</label>
+                    <input type="text" id="new-category-name" name="new-category-name" required><br><br>
+                    <input type="submit" value="更新類別">
+                </form>
+            </div>
+
+            <div id="delete-category">
+                <h4>刪除類別</h4>
+                <form id="delete-category-form">
+                    <label for="delete-category-select">選擇類別：</label>
+                    <select id="delete-category-select" name="delete-category-select">
+                        <!-- 刪除類別的選項將在此動態加載 -->
+                    </select><br><br>
+                    <input type="submit" value="刪除類別">
+                </form>
+            </div>
+        </div>
+
+
+        <div id="inventory-management" class="dashboard inventory">
+            <h3>庫存管理</h3>
+            <div class="panel">
+                <form id="inventory-form">
+                    <label for="inventory-item">庫存項目：</label>
+                    <input type="text" id="inventory-item" name="inventory-item" required><br><br>
+                    <label for="inventory-quantity">數量：</label>
+                    <input type="number" id="inventory-quantity" name="inventory-quantity" required><br><br>
+                    <input type="submit" value="新增庫存">
+                </form>
+            </div>
+            <div class="panel">
+                <h4>現有庫存：</h4>
+                <label for="search-item">搜尋庫存：</label>
+                <input type="text" id="search-item" placeholder="輸入項目名稱">
+                <button onclick="searchInventory()">搜尋</button>
+                <button onclick="exportInventory()">導出庫存</button>
+                <input type="file" id="import-file" accept=".csv" onchange="importInventory(event)">
+                <button onclick="deleteSelectedItems()">批量刪除選中項目</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>選擇</th>
+                            <th>項目</th>
+                            <th>數量</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 庫存行會由 JavaScript 動態生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="customer-list" class="dashboard">
+            <div id="search-bar">
+                <h2>客戶列表</h2>
+                <input type="text" id="search-customer-input" placeholder="搜尋客戶..." onkeyup="searchCustomers()">
+                <!-- 建議放在 #search-bar 內，#search-customer-input 下方 -->
+                <input type="date" id="search-customer-start" placeholder="開始日期">
+                <input type="date" id="search-customer-end" placeholder="結束日期">
+                <button onclick="advancedCustomerSearch()">進階搜尋</button>
+                <div id="no-results" style="display: none;">沒有數據</div>
+                <input type="date" id="date-filter" onchange="filterTable()"/>
+                <button id="add-customer-btn">新增客戶</button>
+                <!-- 新增分頁控制區 -->
+                <div id="customer-pagination" style="margin: 10px 0; text-align: right;">
+                    <button onclick="changeCustomerPage(-1)" id="customer-prev-btn">上一頁</button>
+                    <span id="customer-page-info"></span>
+                    <button onclick="changeCustomerPage(1)" id="customer-next-btn">下一頁</button>
+                </div>
+            </div>
+            <!-- 添加客戶模式 -->
+            <div id="add-customer-modal" style="display: none;">
+                <div>
+                    <h2>新增客戶</h2>
+                    <form id="add-customer-form">
+                        <label for="customer-name">姓名:</label>
+                        <input type="text" id="customer-name" required>
+                        <label for="customer-phone">電話:</label>
+                        <input type="text" id="customer-phone" required>
+                        <label for="customer-email">郵箱:</label>
+                        <input type="email" id="customer-email" required>
+                        <label for="customer-date">註冊日期:</label>
+                        <input type="date" id="customer-date" required>
+                        <button type="submit">提交</button>
+                        <button type="button" onclick="hideAddCustomerModal()">取消</button>
+                    </form>
+                </div>
+            </div>
+            <!-- Edit Customer Modal (可選) -->
+            <div id="edit-customer-modal" style="display: none;">
+                <div>
+                    <h2>編輯客戶</h2>
+                    <form id="edit-customer-form">
+                        <input type="hidden" id="edit-customer-id">
+                        <label for="edit-customer-name">姓名:</label>
+                        <input type="text" id="edit-customer-name" required>
+                        <label for="edit-customer-phone">電話:</label>
+                        <input type="text" id="edit-customer-phone" required>
+                        <label for="edit-customer-email">郵箱:</label>
+                        <input type="email" id="edit-customer-email" required>
+                        <label for="edit-customer-date">註冊日期:</label>
+                        <input type="date" id="edit-customer-date" required>
+                        <button type="submit">保存</button>
+                        <button type="button" onclick="hideEditCustomerModal()">取消</button>
+                    </form>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0, 'string')">客戶編號</th>
+                        <th onclick="sortTable(1, 'string')">客戶姓名</th>
+                        <th onclick="sortTable(2, 'string')">電話號碼</th>
+                        <th onclick="sortTable(3, 'string')">郵箱</th>
+                        <th onclick="sortTable(4, 'date')">註冊日期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="customer-tbody">
+                    <!-- 資料將動態填入此處 -->
+                </tbody>
+            </table>
+            <div id="no-results" style="display: none;">沒有數據</div>
+            <div id="loading" style="display: none;">Loading...</div>
+        </div>
+
+        <div id="feedback" class="dashboard">
+            <h3>評價與反饋</h3>
+            <form>
+                <label for="customer-name">客戶姓名：</label>
+                <input type="text" id="customer-name" name="customer-name" required><br><br>
+                <label for="feedback">反饋內容：</label><br>
+                <textarea id="feedback" name="feedback" rows="4" required></textarea><br><br>
+                <input type="submit" value="提交反饋">
+            </form>
+            <h4>最新反饋：</h4>
+            <ul>
+                <li>顧客A:服務很好，菜品也很美味。</li>
+                <li>顧客B:餐廳環境舒適，但服務稍慢。</li>
+                <!-- 添加更多反饋信息 -->
+                </ul>
+        </div>
+        <div id="employee-list" class="dashboard">
+            <!-- 新增員工 -->
+            <h3>新增員工</h3>
+            <form id="employee-form" onsubmit="return submitEmployeeForm();" method="POST">
+                <label for="employee-name">員工姓名：</label>
+                <input type="text" id="employee-name" name="employee-name" required minlength="2" placeholder="請輸入員工姓名">
+                <span id="name-error" class="error"></span>
+
+                <label for="employee-gender">性别：</label>
+                <input type="text" id="employee-gender" name="employee-gender" required minlength="1"
+                    placeholder="請輸入性别">
+                <span id="gender-error" class="error"></span>
+
+                <label for="employee-position">職位：</label>
+                <input type="text" id="employee-position" name="employee-position" required minlength="2"
+                    placeholder="請輸入職位">
+                <span id="position-error" class="error"></span>
+
+                <label for="employee-phone">電話號碼：</label>
+                <input type="tel" id="employee-phone" name="employee-phone" required pattern="[0-9]{10}"
+                    placeholder="請輸入10位電話號碼">
+                <span id="phone-error" class="error"></span>
+
+                <label for="employee-email">郵箱：</label>
+                <input type="email" id="employee-email" name="employee-email" required placeholder="請輸入有效的郵箱地址">
+                <span id="email-error" class="error"></span>
+
+                <input type="submit" value="新增員工">
+            </form>
+            <h3>員工列表</h3>
+            <input type="text" id="searchInput" placeholder="搜尋員工..." onkeyup="searchStaff()">
+            <!-- 分頁控制區 -->
+            <div id="staff-pagination" style="margin: 10px 0; text-align: right;">
+                <button onclick="changeStaffPage(-1)" id="staff-prev-btn">上一頁</button>
+                <span id="staff-page-info"></span>
+                <button onclick="changeStaffPage(1)" id="staff-next-btn">下一頁</button>
+            </div>
+            <!-- 編輯表單的模態框 -->
+            <div id="editModal" style="display: none;">
+                <form id="editForm">
+                    <label for="editName">姓名:</label>
+                    <input type="text" id="editName" name="name">
+                    <label for="editGender">性别:</label>
+                    <input type="text" id="editGender" name="gender">
+                    <label for="editPosition">職位:</label>
+                    <input type="text" id="editPosition" name="position">
+                    <label for="editPhone">電話:</label>
+                    <input type="text" id="editPhone" name="phone">
+                    <label for="editEmail">郵箱:</label>
+                    <input type="text" id="editEmail" name="email">
+                    <input type="hidden" id="editId" name="id">
+                    <button type="button" onclick="submitEdit()">保存</button>
+                    <button type="button" onclick="closeEditModal()">取消</button>
+                </form>
+            </div>
+            <p>
+            <table id="staffTable">
+                <thead>
+                    <tr>
+                        <th>員工編號</th>
+                        <th>姓名</th>
+                        <th>性別</th> <!-- 添加性别列 -->
+                        <th>職位</th>
+                        <th>電話</th>
+                        <th>郵箱</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 動態資料填充 -->
+                </tbody>
+            </table>
+            </p>
+        </div>
+
+
+        <!--<div id="add-employee" class="dashboard">
+            <h3>新增員工</h3>
+            <form id="employee-form">
+                <label for="employee-name">員工姓名：</label>
+                <input type="text" id="employee-name" name="employee-name" required minlength="2" placeholder="請輸入員工姓名">
+                <span id="name-error" class="error"></span>
+    
+                <label for="employee-position">職位：</label>
+                <input type="text" id="employee-position" name="employee-position" required minlength="2" placeholder="請輸入職位">
+                <span id="position-error" class="error"></span>
+    
+                <label for="employee-email">郵箱：</label>
+                <input type="email" id="employee-email" name="employee-email" required placeholder="請輸入有效的郵箱地址">
+                <span id="email-error" class="error"></span>
+    
+                <label for="employee-phone">電話號碼：</label>
+                <input type="tel" id="employee-phone" name="employee-phone" required pattern="[0-9]{10}" placeholder="請輸入10位電話號碼">
+                <span id="phone-error" class="error"></span>
+    
+                <label for="employee-department">部門：</label>
+                <select id="employee-department" name="employee-department" required>
+                    <option value="">請選擇部門</option>
+                    <option value="hr">人力資源部</option>
+                    <option value="it">資訊技術部</option>
+                    <option value="sales">銷售部</option>
+                    <option value="finance">財務部</option>
+                </select>
+    
+                <label for="employee-level">等級：</label>
+                <select id="employee-level" name="employee-level" required>
+                    <option value="">請選擇等級</option>
+                    <option value="junior">初級</option>
+                    <option value="mid">中級</option>
+                    <option value="senior">高級</option>
+                </select>
+    
+                <label for="employee-photo">上傳照片：</label>
+                <input type="file" id="employee-photo" name="employee-photo" accept="image/*">
+    
+                <label for="employee-start-date">入職日期：</label>
+                <input type="date" id="employee-start-date" name="employee-start-date" required>
+    
+                <input type="submit" value="新增員工">
+            </form>
+        </div>-->
+
+        <div id="schedule-management" class="dashboard">
+            <h3>排班管理</h3>
+            <p>
+            <form id="schedule-form">
+                <label for="employee-name">輸入姓名：</label>
+                <input type="text" id="employee-name" name="employee-name" required><br><br>
+                <label for="shift-date">日期：</label>
+                <input type="date" id="shift-date" name="shift-date" required><br><br>
+                <label for="shift-time">時間：</label>
+                <input type="time" id="shift-time" name="shift-time" required><br><br>
+                <label for="shift-duration">持續時間（小時）：</label>
+                <input type="number" id="shift-duration" name="shift-duration" min="1" required><br><br>
+                <input type="submit" value="排班">
+            </form>
+            </p>
+
+            <!-- 排班列表 -->
+            <h3>排班列表</h3>
+            <table id="schedule-table" border="1">
+                <thead>
+                    <tr>
+                        <th>員工姓名</th>
+                        <th>日期</th>
+                        <th>時間</th>
+                        <th>持續時間（小時）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 這裡會插入排班的數據 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="sales-report" class="dashboard">
+            <h3>銷售報表</h3>
+
+            <!-- 日期範圍 -->
+            <div>
+                <label for="timePeriodFilter">日期範圍:</label>
+                <select id="timePeriodFilter">
+                    <option value="monthly">每月</option>
+                    <option value="quarterly">每季度</option>
+                    <option value="yearly">每年</option>
+                </select>
+            </div>
+
+            <!-- 銷售數據 -->
+            <div>
+                <h4>銷售數據</h4>
+                <p>銷售額、銷售量、單價按分類統計：</p>
+                <canvas id="salesDataChart"></canvas>
+            </div>
+
+            <!-- 成本和利潤 -->
+            <div>
+                <h4>成本和利潤</h4>
+                <p>包括銷售成本、毛利和淨利润：</p>
+                <canvas id="costProfitChart"></canvas>
+            </div>
+
+            <!-- 銷售趨勢分析 -->
+            <div>
+                <h4>銷售趨勢分析</h4>
+                <p>銷售數據的趨勢變化：</p>
+                <canvas id="salesTrendChart"></canvas>
+            </div>
+
+            <!-- 客戶分析 -->
+            <div>
+                <h4>客戶分析</h4>
+                <p>新客戶和現有客戶的銷售情況：</p>
+                <canvas id="customerAnalysisChart"></canvas>
+            </div>
+
+            <!-- 地區或市場分析 -->
+            <div>
+                <h4>地區或市場分析</h4>
+                <p>各地區或市場的銷售表現：</p>
+                <canvas id="regionalMarketChart"></canvas>
+            </div>
+
+            <!-- 產品或服務分析 -->
+            <div>
+                <h4>產品或服務分析</h4>
+                <p>不同產品或服務的銷售額和銷售量：</p>
+                <canvas id="productServiceChart"></canvas>
+            </div>
+
+            <!-- 銷售渠道分析 -->
+            <div>
+                <h4>銷售渠道分析</h4>
+                <p>各銷售渠道的貢獻：</p>
+                <canvas id="salesChannelChart"></canvas>
+            </div>
+
+            <!-- 銷售人員績效 -->
+            <div>
+                <h4>銷售人員績效</h4>
+                <p>各銷售人員的銷售表現：</p>
+                <canvas id="salesPerformanceChart"></canvas>
+            </div>
+
+            <!-- 圖表工具提示 -->
+            <div id="tooltip" style="display: none;"></div>
+        </div>
+
+        <div id="customer-analysis" class="dashboard">
+            <h3>客戶分析</h3>
+            <div class="date-range">
+                <label for="start-date">開始日期:</label>
+                <input type="date" id="start-date">
+                <label for="end-date">結束日期:</label>
+                <input type="date" id="end-date">
+                <button id="filter-button">篩選</button>
+            </div>
+            <table id="analysis-table">
+                <thead>
+                    <tr>
+                        <th>時間段</th>
+                        <th>來客數</th>
+                        <th>消費金額 (元)</th>
+                        <th>平均消費金額 (元)</th>
+                        <th>增長百分比</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024年10月1日</td>
+                        <td>150</td>
+                        <td>30000</td>
+                        <td>200</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>2024年10月2日</td>
+                        <td>120</td>
+                        <td>24000</td>
+                        <td>200</td>
+                        <td>-20%</td>
+                    </tr>
+                    <tr>
+                        <td>2024年10月3日</td>
+                        <td>180</td>
+                        <td>45000</td>
+                        <td>250</td>
+                        <td>50%</td>
+                    </tr>
+                    <tr>
+                        <td>2024年10月4日</td>
+                        <td>200</td>
+                        <td>60000</td>
+                        <td>300</td>
+                        <td>11.11%</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <div class="customer-type-analysis">
+                <h4>客戶類型分析</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>客戶類型</th>
+                            <th>數量</th>
+                            <th>消費金額 (元)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>新客戶</td>
+                            <td>50</td>
+                            <td>12000</td>
+                        </tr>
+                        <tr>
+                            <td>回頭客</td>
+                            <td>350</td>
+                            <td>78000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+            <div class="export-report">
+                <button id="export-button">導出報告</button>
+            </div>
+        </div>                                    
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        //客戶(進階搜尋)
+        function advancedCustomerSearch() {
+            const nameInput = document.getElementById('search-customer-input').value.toLowerCase();
+            const startDate = document.getElementById('search-customer-start').value;
+            const endDate = document.getElementById('search-customer-end').value;
+            const rows = document.querySelectorAll('#customer-tbody tr');
+            let noResults = true;
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const customerName = cells[1].textContent.toLowerCase();
+                const regDate = cells[4].textContent;
+                let show = true;
+
+                if (nameInput && !customerName.includes(nameInput)) show = false;
+                if (startDate && regDate < startDate) show = false;
+                if (endDate && regDate > endDate) show = false;
+
+                row.style.display = show ? '' : 'none';
+                if (show) noResults = false;
+            });
+
+            document.getElementById('no-results').style.display = noResults ? 'block' : 'none';
+        }
+
+        // 日期篩選功能
+        document.getElementById('filter-button').addEventListener('click', function() {
+            const startDate = new Date(document.getElementById('start-date').value);
+            const endDate = new Date(document.getElementById('end-date').value);
+            
+            const rows = document.querySelectorAll('#analysis-table tbody tr');
+            rows.forEach(row => {
+                const dateCell = new Date(row.cells[0].innerText);
+                if (dateCell >= startDate && dateCell <= endDate) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // 導出報告功能
+        document.getElementById('export-button').addEventListener('click', function() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            const rows = document.querySelectorAll('#analysis-table tr');
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('th, td');
+                const rowData = Array.from(cols).map(col => col.innerText).join(",");
+                csvContent += rowData + "\r\n";
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "customer_analysis_report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        //庫存異動表
+        function showInventoryReport() {
+            window.location.href = 'inventory.html';  
+        }
+
+        //跳轉到訂單管理
+        function showOrderManagement() {
+            window.location.href = 'order.html'; 
+        }
+        function debounce(fn, delay = 500) {
+            let timer;
+
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    fn(...args);
+                }, delay);
+            };
+        }
+
+        //類別
+        document.getElementById('add-category-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const categoryName = document.getElementById('category-name').value.trim();
+            if (categoryName) {
+                const categories = JSON.parse(localStorage.getItem('categories')) || [];
+                if (!categories.includes(categoryName)) {
+                    categories.push(categoryName);
+                    localStorage.setItem('categories', JSON.stringify(categories));
+                    initializeCategories();
+                    document.getElementById('category-name').value = '';
+                } else {
+                    alert('類別已存在！');
+                }
+            }
+        });
+
+        // 功能以顯示“添加客戶”模式
+        function showAddCustomerModal() {
+            document.getElementById('add-customer-modal').style.display = 'block';
+        }
+
+        // 隱藏“添加客戶”模式的功能
+        function hideAddCustomerModal() {
+            document.getElementById('add-customer-modal').style.display = 'none';
+        }
+
+        // 將事件偵聽器添加到“添加客戶”按鈕
+        document.getElementById('add-customer-btn').addEventListener('click', showAddCustomerModal);
+
+        //登入者更新用戶信息
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('manage1.php')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('employee-name-info').textContent = data.username;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        //登入者
+        document.addEventListener('DOMContentLoaded', function () {
+            // 假設你從伺服器獲取登入者的名稱和頭像
+            var isLoggedIn = false;  // 根據實際情況設置，例如從 session 或後端返回的狀態
+            var employeeName = 'John Doe';  // 從後端獲取的登入者姓名
+            var avatarUrl = 'path-to-avatar.png';  // 從後端獲取的頭像 URL
+
+            if (isLoggedIn) {
+                // 如果用戶已登入，顯示登入者信息
+                document.getElementById('employee-name').textContent = '登入者: ' + employeeName;
+                document.getElementById('employee-avatar').src = avatarUrl;
+            } else {
+                // 如果用戶尚未登入，顯示提示信息
+                document.getElementById('employee-name').textContent = '尚未登入';
+                document.getElementById('employee-avatar').src = 'cat.png';  // 預設頭像
+            }
+        });
+
+        //首頁
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            setInterval(fetchData, 60000); // 每60秒刷新一次數據
+        });
+
+        async function fetchData() {
+            try {
+                const response = await fetch('data-endpoint.php'); // 修改为你的數據端點
+                const data = await response.json();
+
+                // 更新儀表板
+                document.querySelector('#home .card:nth-child(1) p').textContent = data.orderCount;
+                document.querySelector('#home .card:nth-child(2) p').textContent = `NT$ ${data.salesAmount}`;
+                document.querySelector('#home .card:nth-child(3) p').textContent = data.newCustomers;
+                document.querySelector('#home .card:nth-child(4) p').textContent = data.pendingOrders;
+
+                updateChart('salesTrend', data.salesTrendData);
+                updateChart('inventoryLevels', data.inventoryLevelsData);
+
+                const latestOrders = data.latestOrders.map(order => `<li>訂單 #${order.id} - ${order.timeAgo}</li>`).join('');
+                document.querySelector('#home .card:nth-child(7) ul').innerHTML = latestOrders;
+
+                document.querySelector('#home .card:nth-child(8) p').textContent = data.systemNotification;
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function updateChart(canvasId, chartData) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            if (window.myCharts && window.myCharts[canvasId]) {
+                window.myCharts[canvasId].data.labels = chartData.labels;
+                window.myCharts[canvasId].data.datasets[0].data = chartData.values;
+                window.myCharts[canvasId].update();
+            } else {
+                window.myCharts = window.myCharts || {};
+                window.myCharts[canvasId] = new Chart(ctx, {
+                    type: 'line', // 或其他你需要的圖表類型
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [{
+                            label: '數據',
+                            data: chartData.values,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        }
+
+        //銷售報表
+        document.addEventListener('DOMContentLoaded', function () {
+            // 示例數據（實際數據應從伺服器或資料庫獲取）
+            const salesData = [
+                { date: '2024-01', sales_amount: 10000 },
+                { date: '2024-02', sales_amount: 12000 },
+                { date: '2024-03', sales_amount: 9000 },
+                // 添加更多數據
+            ];
+
+            const costProfitData = [
+                { date: '2024-01', cost: 5000, gross_profit: 3000, net_profit: 2000 },
+                { date: '2024-02', cost: 6000, gross_profit: 4000, net_profit: 2500 },
+                { date: '2024-03', cost: 4500, gross_profit: 2500, net_profit: 1500 },
+                // 添加更多數據
+            ];
+
+            const salesTrendData = [
+                { date: '2024-01', trend: 5 },
+                { date: '2024-02', trend: 7 },
+                { date: '2024-03', trend: 6 },
+                // 添加更多數據
+            ];
+
+            const charts = [
+                {
+                    id: 'salesDataChart',
+                    type: 'line',
+                    data: {
+                        labels: salesData.map(item => item.date),
+                        datasets: [{
+                            label: '銷售額',
+                            data: salesData.map(item => item.sales_amount),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return `銷售額: ${tooltipItem.raw}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                },
+                {
+                    id: 'costProfitChart',
+                    type: 'bar',
+                    data: {
+                        labels: costProfitData.map(item => item.date),
+                        datasets: [
+                            {
+                                label: '成本',
+                                data: costProfitData.map(item => item.cost),
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: '毛利',
+                                data: costProfitData.map(item => item.gross_profit),
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: '淨利潤',
+                                data: costProfitData.map(item => item.net_profit),
+                                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const dataset = tooltipItem.dataset.label;
+                                        const value = tooltipItem.raw;
+                                        return `${dataset}: ${value}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                },
+                {
+                    id: 'salesTrendChart',
+                    type: 'line',
+                    data: {
+                        labels: salesTrendData.map(item => item.date),
+                        datasets: [{
+                            label: '銷售趨勢',
+                            data: salesTrendData.map(item => item.trend),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        return `趨勢: ${tooltipItem.raw}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                },
+                {
+                    id: 'customerAnalysisChart',
+                    type: 'pie',
+                    data: {
+                        labels: ['新客戶', '現有客戶'],
+                        datasets: [{
+                            label: '客戶類型',
+                            data: [300, 500], // 示例數據
+                            backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+                            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 159, 64, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const dataset = tooltipItem.dataset.label;
+                                        const value = tooltipItem.raw;
+                                        return `${dataset}: ${value}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'regionalMarketChart',
+                    type: 'bar',
+                    data: {
+                        labels: ['北區', '南區', '東區', '西區'],
+                        datasets: [{
+                            label: '銷售額',
+                            data: [12000, 15000, 18000, 10000], // 示例數據
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const dataset = tooltipItem.dataset.label;
+                                        const value = tooltipItem.raw;
+                                        return `${dataset}: ${value}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                },
+                {
+                    id: 'productServiceChart',
+                    type: 'doughnut',
+                    data: {
+                        labels: ['產品A', '產品B', '產品C', '服務D'],
+                        datasets: [{
+                            label: '銷售額',
+                            data: [10000, 15000, 12000, 8000], // 示例數據
+                            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+                            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const dataset = tooltipItem.dataset.label;
+                                        const value = tooltipItem.raw;
+                                        return `${dataset}: ${value}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    id: 'salesChannelChart',
+                    type: 'bar',
+                    data: {
+                        labels: ['線上', '實體店', '電話訂單', '其他'],
+                        datasets: [{
+                            label: '銷售渠道貢獻',
+                            data: [40000, 25000, 15000, 5000], // 示例數據
+                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const dataset = tooltipItem.dataset.label;
+                                        const value = tooltipItem.raw;
+                                        return `${dataset}: ${value}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true },
+                            y: { beginAtZero: true }
+                        }
+                    }
+                },
+                {
+                    id: 'salesPerformanceChart',
+                    type: 'radar',
+                    data: {
+                        labels: ['銷售額', '客戶滿意度', '回報率', '完成目標'],
+                        datasets: [{
+                            label: '銷售人員A',
+                            data: [80, 90, 85, 70], // 示例數據
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: '銷售人員B',
+                            data: [70, 80, 75, 60], // 示例數據
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        const dataset = tooltipItem.dataset.label;
+                                        const value = tooltipItem.raw;
+                                        return `${dataset}: ${value}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ];
+
+            charts.forEach(chart => {
+                const ctx = document.getElementById(chart.id).getContext('2d');
+                new Chart(ctx, chart);
+            });
+        });
+
+        // (類別管理)初始化類别數據
+        const initializeCategories = () => {
+            const categories = JSON.parse(localStorage.getItem('categories')) || [];
+            const categoryList = document.getElementById('category-list');
+            const editCategorySelect = document.getElementById('edit-category-select');
+            const deleteCategorySelect = document.getElementById('delete-category-select');
+
+            // 清空列表和下拉菜單
+            categoryList.innerHTML = '';
+            editCategorySelect.innerHTML = '';
+            deleteCategorySelect.innerHTML = '';
+
+            categories.forEach(category => {
+                // 添加到列表
+                const li = document.createElement('li');
+                li.textContent = category;
+                categoryList.appendChild(li);
+
+                // 添加到下拉菜單
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                editCategorySelect.appendChild(option.cloneNode(true));
+                deleteCategorySelect.appendChild(option);
+            });
+        };
+
+        // 添加類别
+        document.getElementById('add-category-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const categoryName = document.getElementById('category-name').value.trim();
+            if (categoryName) {
+                const categories = JSON.parse(localStorage.getItem('categories')) || [];
+                if (!categories.includes(categoryName)) {
+                    categories.push(categoryName);
+                    localStorage.setItem('categories', JSON.stringify(categories));
+                    initializeCategories();
+                    document.getElementById('category-name').value = '';
+                } else {
+                    alert('類别已存在！');
+                }
+            }
+        });
+
+        // 編輯類别
+        document.getElementById('edit-category-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const oldCategoryName = document.getElementById('edit-category-select').value;
+            const newCategoryName = document.getElementById('new-category-name').value.trim();
+            if (newCategoryName) {
+                const categories = JSON.parse(localStorage.getItem('categories')) || [];
+                const index = categories.indexOf(oldCategoryName);
+                if (index > -1) {
+                    categories[index] = newCategoryName;
+                    localStorage.setItem('categories', JSON.stringify(categories));
+                    initializeCategories();
+                    document.getElementById('new-category-name').value = '';
+                }
+            }
+        });
+
+        // 删除類别
+        document.getElementById('delete-category-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const categoryName = document.getElementById('delete-category-select').value;
+            const categories = JSON.parse(localStorage.getItem('categories')) || [];
+            const index = categories.indexOf(categoryName);
+            if (index > -1) {
+                categories.splice(index, 1);
+                localStorage.setItem('categories', JSON.stringify(categories));
+                initializeCategories();
+            }
+        });
+
+        // 初始化頁面
+        initializeCategories();
+
+        // (庫存管理)初始化庫存數據
+        function initializeInventory() {
+            if (!localStorage.getItem('inventory')) {
+                const initialInventory = [
+                    { item: '鮭魚', quantity: 50 },
+                    { item: '雞肉', quantity: 75 },
+                    { item: '鮮蝦', quantity: 60 },
+                    { item: '豆腐', quantity: 66 },
+                    { item: '玉子燒', quantity: 80 },
+                    { item: '地瓜泥', quantity: 60 },
+                    { item: '水煮蛋', quantity: 75 },
+                    { item: '花椰菜', quantity: 75 },
+                    { item: '杏鮑菇', quantity: 85 },
+                    { item: '章魚', quantity: 50 },
+                    { item: '鮪魚', quantity: 90 },
+                    { item: '紫薯泥', quantity: 70 },
+                    { item: '玉米筍', quantity: 88 },
+                    { item: '黃金泡菜', quantity: 66 },
+                    { item: '洋蔥', quantity: 45 },
+                    { item: '海帶絲', quantity: 75 },
+                    { item: '玉米粒', quantity: 55 },
+                ];
+                localStorage.setItem('inventory', JSON.stringify(initialInventory));
+            }
+        }
+
+        // 加載庫存數據並顯示
+        function loadInventory() {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            displayInventory(inventory);
+        }
+
+        // 顯示庫存數據
+        function displayInventory(data) {
+            const tableBody = document.querySelector('table tbody');
+            tableBody.innerHTML = '';  // 先清空表格
+
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+
+                // 根據是否停用來改變顯示
+                const status = item.disabled ? '停用' : '啟用';
+                const statusColor = item.disabled ? 'red' : 'green';
+
+                row.innerHTML = `
+                    <td><input type="checkbox" data-index="${index}" ${item.disabled ? 'disabled' : ''}></td>
+                    <td>${item.item}</td>
+                    <td>${item.quantity}</td>
+                    <td style="color: ${statusColor}">${status}</td>
+                    <td>
+                        <button onclick="editInventory(${index})">編輯</button>
+                        <button onclick="disableInventory(${index})" ${item.disabled ? 'disabled' : ''}>停用</button>
+                        <button onclick="enableInventory(${index})" ${!item.disabled ? 'disabled' : ''}>啟用</button>
+                        <button onclick="increaseQuantity(${index})">增加數量</button>
+                        <button onclick="decreaseQuantity(${index})">減少數量</button>
+                        <button onclick="viewItemDetails(${index})">查看詳情</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+
+        // 添加庫存數據
+        function addInventory(item, quantity) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            inventory.push({ item, quantity });
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            loadInventory();
+        }
+
+        // 編輯庫存數據
+        function editInventory(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            const newItem = prompt("請輸入新的庫存項目名稱", inventory[index].item);
+            const newQuantity = prompt("請輸入新的數量", inventory[index].quantity);
+            if (newItem !== null && newQuantity !== null) {
+                inventory[index] = { item: newItem, quantity: parseInt(newQuantity) };
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                loadInventory();
+            }
+        }
+
+
+        // 停用庫存數據
+        /*function deleteInventory(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            inventory.splice(index, 1);
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            loadInventory();
+        }*/
+        // 停用庫存數據
+        function disableInventory(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            if (index >= 0 && index < inventory.length) {
+                inventory[index].disabled = true;  // 設置為停用
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                
+                // 直接更新顯示庫存
+                displayInventory(inventory);  // 不再等待 loadInventory()
+            }
+        }
+
+        // 啟用庫存數據
+        function enableInventory(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            if (index >= 0 && index < inventory.length) {
+                inventory[index].disabled = false;  // 設置為啟用
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                
+                // 直接更新顯示庫存
+                displayInventory(inventory);  // 不再等待 loadInventory()
+            }
+        }
+
+        // 批量刪除選中項目
+        /*function deleteSelectedItems() {
+            let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            const checkboxes = document.querySelectorAll('table tbody input[type="checkbox"]');
+            checkboxes.forEach((checkbox, index) => {
+                if (checkbox.checked) {
+                    inventory.splice(index, 1);
+                }
+            });
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            loadInventory();
+        }*/
+
+        // 導出庫存數據
+        function exportInventory() {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            let csvContent = "\uFEFF" + "項目,數量\n";
+            inventory.forEach(item => {
+                csvContent += `${item.item},${item.quantity}\n`;
+            });
+            const encodedUri = "data:text/csv;charset=utf-8," + encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "inventory.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        // 導入庫存數據
+        function importInventory(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const contents = e.target.result;
+                const rows = contents.split('\n').slice(1);
+                const newInventory = rows.map(row => {
+                    const [item, quantity] = row.split(',');
+                    return { item, quantity: parseInt(quantity) };
+                }).filter(item => item.item);
+                localStorage.setItem('inventory', JSON.stringify(newInventory));
+                loadInventory();
+            };
+            reader.readAsText(file);
+        }
+
+        // 搜尋庫存項目
+        function searchInventory() {
+            const searchTerm = document.getElementById('search-item').value.toLowerCase();
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            const filteredInventory = inventory.filter(item => item.item.toLowerCase().includes(searchTerm));
+            displayInventory(filteredInventory);
+        }
+
+        // 增加庫存數量
+        function increaseQuantity(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            inventory[index].quantity += 1;
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            loadInventory();
+        }
+
+        // 減少庫存數量
+        function decreaseQuantity(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            if (inventory[index].quantity > 0) {
+                inventory[index].quantity -= 1;
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                loadInventory();
+            } else {
+                alert("數量不能為負數");
+            }
+        }
+
+        // 查看庫存項目詳情
+        function viewItemDetails(index) {
+            const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            const item = inventory[index];
+            alert(`項目: ${item.item}\n數量: ${item.quantity}`);
+        }
+
+        // 表單提交事件處理
+        document.getElementById('inventory-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const item = document.getElementById('inventory-item').value;
+            const quantity = document.getElementById('inventory-quantity').value;
+            addInventory(item, quantity);
+            document.getElementById('inventory-form').reset();
+        });
+
+        // 初始化並加載庫存
+        initializeInventory();
+        loadInventory();
+
+        //員工
+        window.onload = function () {
+            fetchStaff();
+        };
+
+        // 分頁相關變數
+        let staffData = [];
+        let staffCurrentPage = 1;
+        const staffPageSize = 10;
+
+
+        // 獲取員工資料並填充表格
+        function fetchStaff() {
+            fetch('get-data.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('網絡響應不是 OK');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    staffData = data;
+                    staffCurrentPage = 1;
+                    renderStaffTable();
+                    updateStaffPagination();
+                })
+                .catch(error => console.error('獲取資料失敗:', error));
+        }
+
+        // 渲染分頁後的員工表格
+        function renderStaffTable() {
+            const tableBody = document.querySelector('#staffTable tbody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            const start = (staffCurrentPage - 1) * staffPageSize;
+            const end = start + staffPageSize;
+            const pageData = staffData.slice(start, end);
+            pageData.forEach(staff => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${staff.member_ID}</td>
+                    <td>${staff.name}</td>
+                    <td>${staff.gender}</td>
+                    <td>${staff.position}</td>
+                    <td>${staff.phone}</td>
+                    <td>${staff.email}</td>
+                    <td>
+                        <button onclick="editStaff(${staff.member_ID})">編輯</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // 更新分頁資訊
+        function updateStaffPagination() {
+            const totalPages = Math.ceil(staffData.length / staffPageSize) || 1;
+            document.getElementById('staff-page-info').textContent = `第 ${staffCurrentPage} / ${totalPages} 頁`;
+            document.getElementById('staff-prev-btn').disabled = staffCurrentPage === 1;
+            document.getElementById('staff-next-btn').disabled = staffCurrentPage === totalPages;
+        }
+
+        // 切換分頁
+        function changeStaffPage(delta) {
+            const totalPages = Math.ceil(staffData.length / staffPageSize) || 1;
+            staffCurrentPage += delta;
+            if (staffCurrentPage < 1) staffCurrentPage = 1;
+            if (staffCurrentPage > totalPages) staffCurrentPage = totalPages;
+            renderStaffTable();
+            updateStaffPagination();
+        }
+
+        // 搜尋員工時也要分頁
+        function searchStaff() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const filtered = staffData.filter(staff =>
+                staff.member_ID.toString().includes(filter) ||
+                staff.name.toLowerCase().includes(filter) ||
+                staff.gender.toLowerCase().includes(filter) ||
+                staff.position.toLowerCase().includes(filter) ||
+                staff.phone.toLowerCase().includes(filter) ||
+                staff.email.toLowerCase().includes(filter)
+            );
+            staffCurrentPage = 1;
+            staffDataFiltered = filtered;
+            renderStaffTableFiltered(filtered);
+            updateStaffPaginationFiltered(filtered);
+        }
+
+        // 分頁渲染搜尋結果
+        function renderStaffTableFiltered(filtered) {
+            const tableBody = document.querySelector('#staffTable tbody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            const start = (staffCurrentPage - 1) * staffPageSize;
+            const end = start + staffPageSize;
+            const pageData = filtered.slice(start, end);
+            pageData.forEach(staff => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${staff.member_ID}</td>
+                    <td>${staff.name}</td>
+                    <td>${staff.gender}</td>
+                    <td>${staff.position}</td>
+                    <td>${staff.phone}</td>
+                    <td>${staff.email}</td>
+                    <td>
+                        <button onclick="editStaff(${staff.member_ID})">編輯</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // 更新搜尋分頁資訊
+        function updateStaffPaginationFiltered(filtered) {
+            const totalPages = Math.ceil(filtered.length / staffPageSize) || 1;
+            document.getElementById('staff-page-info').textContent = `第 ${staffCurrentPage} / ${totalPages} 頁`;
+            document.getElementById('staff-prev-btn').disabled = staffCurrentPage === 1;
+            document.getElementById('staff-next-btn').disabled = staffCurrentPage === totalPages;
+        }
+
+        // 修改分頁按鈕事件，搜尋時也能切換
+        document.getElementById('staff-prev-btn').onclick = function() {
+            if (typeof staffDataFiltered !== 'undefined') {
+                if (staffCurrentPage > 1) {
+                    staffCurrentPage--;
+                    renderStaffTableFiltered(staffDataFiltered);
+                    updateStaffPaginationFiltered(staffDataFiltered);
+                }
+            } else {
+                changeStaffPage(-1);
+            }
+        };
+        document.getElementById('staff-next-btn').onclick = function() {
+            if (typeof staffDataFiltered !== 'undefined') {
+                const totalPages = Math.ceil(staffDataFiltered.length / staffPageSize) || 1;
+                if (staffCurrentPage < totalPages) {
+                    staffCurrentPage++;
+                    renderStaffTableFiltered(staffDataFiltered);
+                    updateStaffPaginationFiltered(staffDataFiltered);
+                }
+            } else {
+                changeStaffPage(1);
+            }
+        };
+
+        //新增員工
+        function submitEmployeeForm() {
+            const form = document.getElementById('employee-form');
+            const formData = new FormData(form);
+
+            fetch('add-employee.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('員工已成功新增');
+                        fetchStaff(); // 重新加載員工資料
+                        form.reset(); // 清空表單
+                    } else {
+                        alert('新增失敗: ' + result.message);
+                    }
+                })
+                .catch(error => console.error('提交失敗:', error));
+
+            return false; // 防止表單的預設提交行為
+        }
+
+        // 編輯員工資料
+        function editStaff(id) {
+            fetch(`get-staff.php?id=${id}`)
+                .then(response => response.json())
+                .then(staff => {
+                    document.getElementById('editName').value = staff.name;
+                    document.getElementById('editGender').value = staff.gender;
+                    document.getElementById('editPosition').value = staff.position;
+                    document.getElementById('editPhone').value = staff.phone;
+                    document.getElementById('editEmail').value = staff.email;
+                    document.getElementById('editId').value = staff.member_ID;
+                    document.getElementById('editModal').style.display = 'block'; // 顯示模态框
+                })
+                .catch(error => console.error('獲取取員工數據失敗:', error));
+        }
+
+        // 保存编辑的員工信息
+        function submitEdit() {
+            const formData = new FormData(document.getElementById('editForm'));
+
+            fetch('update-data.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('員工信息已更新');
+                        fetchStaff(); // 重新加载員工數據
+                        closeEditModal(); // 關閉模態框
+                    } else {
+                        alert('更新失败');
+                    }
+                })
+                .catch(error => console.error('更新数据失败:', error));
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none'; // 關閉模态框
+        }
+
+        // 刪除員工
+        function deleteStaff(id) {
+            if (confirm('確定要刪除這個員工嗎？')) {
+                fetch(`delete-data.php?id=${id}`, { method: 'DELETE' })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('刪除請求失敗');
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        if (result.success) {
+                            alert('員工已刪除');
+                            fetchStaff(); // 重新加載員工資料
+                        } else {
+                            alert('刪除失敗');
+                        }
+                    })
+                    .catch(error => console.error('刪除資料失敗:', error));
+            }
+        }
+
+        //客戶
+        document.addEventListener('DOMContentLoaded', function () {
+            loadCustomerList(); // 在頁面加載時調用
+            document.getElementById('search-button').addEventListener('click', searchCustomers); // 添加事件監聽
+        });
+
+        // 客戶分頁相關變數
+        let customerData = [];
+        let customerCurrentPage = 1;
+        const customerPageSize = 10;
+        let customerDataFiltered = undefined;
+
+
+        // 加載並顯示客戶列表
+        function loadCustomerList() {
+            fetch('get-customers.php')
+                .then(response => response.json())
+                .then(data => {
+                    customerData = data;
+                    customerCurrentPage = 1;
+                    customerDataFiltered = undefined;
+                    renderCustomerTable();
+                    updateCustomerPagination();
+                })
+                .catch(error => console.error('Error fetching customer data:', error));
+        }
+
+        // 渲染分頁後的客戶表格
+        function renderCustomerTable() {
+            const customerTbody = document.getElementById('customer-tbody');
+            if (!customerTbody) return;
+            customerTbody.innerHTML = '';
+            const start = (customerCurrentPage - 1) * customerPageSize;
+            const end = start + customerPageSize;
+            const pageData = customerData.slice(start, end);
+            pageData.forEach(customer => {
+                const row = `
+                    <tr>
+                        <td>${customer.Customer_ID}</td>
+                        <td>${customer.name}</td>
+                        <td>${customer.phone}</td>
+                        <td>${customer.email}</td>
+                        <td>${customer.date}</td>
+                        <td><button onclick="openEditCustomerModal(${customer.Customer_ID}, '${customer.name}', '${customer.phone}', '${customer.email}', '${customer.date}')">編輯</button></td>
+                    </tr>
+                `;
+                customerTbody.innerHTML += row;
+            });
+        }
+
+        // 更新分頁資訊
+        function updateCustomerPagination() {
+            const totalPages = Math.ceil(customerData.length / customerPageSize) || 1;
+            document.getElementById('customer-page-info').textContent = `第 ${customerCurrentPage} / ${totalPages} 頁`;
+            document.getElementById('customer-prev-btn').disabled = customerCurrentPage === 1;
+            document.getElementById('customer-next-btn').disabled = customerCurrentPage === totalPages;
+        }
+
+        // 切換分頁
+        function changeCustomerPage(delta) {
+            let data = customerDataFiltered !== undefined ? customerDataFiltered : customerData;
+            const totalPages = Math.ceil(data.length / customerPageSize) || 1;
+            customerCurrentPage += delta;
+            if (customerCurrentPage < 1) customerCurrentPage = 1;
+            if (customerCurrentPage > totalPages) customerCurrentPage = totalPages;
+            if (customerDataFiltered !== undefined) {
+                renderCustomerTableFiltered(customerDataFiltered);
+                updateCustomerPaginationFiltered(customerDataFiltered);
+            } else {
+                renderCustomerTable();
+                updateCustomerPagination();
+            }
+        }
+
+        // todo filter
+        const updateDebounceText = debounce(() => {
+            const input = document.getElementById('search-customer-input').value.toLowerCase();
+            console.log(input);
+            const rows = document.querySelectorAll('#customer-tbody tr');
+
+            let noResults = true;
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const customerName = cells[1].textContent.toLowerCase(); // 假設第2欄是客戶姓名
+
+                // 比較客戶姓名和輸入
+                if (customerName.includes(input)) {
+                    row.style.display = ''; // 顯示匹配的行
+                    noResults = false;
+                } else {
+                    row.style.display = 'none'; // 隱藏不匹配的行
+                }
+            });
+
+            // 顯示或隱藏沒有結果的提示
+            document.getElementById('no-results').style.display = noResults ? 'block' : 'none';
+        }, 500);
+
+
+        // 搜尋客戶時也要分頁
+        function searchCustomers() {
+            updateDebounceText();
+            const input = document.getElementById('search-customer-input').value.toLowerCase();
+            const filtered = customerData.filter(customer =>
+                customer.Customer_ID.toString().includes(input) ||
+                customer.name.toLowerCase().includes(input) ||
+                customer.phone.toLowerCase().includes(input) ||
+                customer.email.toLowerCase().includes(input) ||
+                customer.date.toLowerCase().includes(input)
+            );
+            customerCurrentPage = 1;
+            customerDataFiltered = filtered;
+            renderCustomerTableFiltered(filtered);
+            updateCustomerPaginationFiltered(filtered);
+        }
+
+        // 分頁渲染搜尋結果
+        function renderCustomerTableFiltered(filtered) {
+            const customerTbody = document.getElementById('customer-tbody');
+            if (!customerTbody) return;
+            customerTbody.innerHTML = '';
+            const start = (customerCurrentPage - 1) * customerPageSize;
+            const end = start + customerPageSize;
+            const pageData = filtered.slice(start, end);
+            pageData.forEach(customer => {
+                const row = `
+                    <tr>
+                        <td>${customer.Customer_ID}</td>
+                        <td>${customer.name}</td>
+                        <td>${customer.phone}</td>
+                        <td>${customer.email}</td>
+                        <td>${customer.date}</td>
+                        <td><button onclick="openEditCustomerModal(${customer.Customer_ID}, '${customer.name}', '${customer.phone}', '${customer.email}', '${customer.date}')">編輯</button></td>
+                    </tr>
+                `;
+                customerTbody.innerHTML += row;
+            });
+        }
+
+        // 更新搜尋分頁資訊
+        function updateCustomerPaginationFiltered(filtered) {
+            const totalPages = Math.ceil(filtered.length / customerPageSize) || 1;
+            document.getElementById('customer-page-info').textContent = `第 ${customerCurrentPage} / ${totalPages} 頁`;
+            document.getElementById('customer-prev-btn').disabled = customerCurrentPage === 1;
+            document.getElementById('customer-next-btn').disabled = customerCurrentPage === totalPages;
+        }
+
+        // 修改分頁按鈕事件，搜尋時也能切換
+        document.getElementById('customer-prev-btn').onclick = function() {
+            if (customerDataFiltered !== undefined) {
+                if (customerCurrentPage > 1) {
+                    customerCurrentPage--;
+                    renderCustomerTableFiltered(customerDataFiltered);
+                    updateCustomerPaginationFiltered(customerDataFiltered);
+                }
+            } else {
+                changeCustomerPage(-1);
+            }
+        };
+        document.getElementById('customer-next-btn').onclick = function() {
+            let data = customerDataFiltered !== undefined ? customerDataFiltered : customerData;
+            const totalPages = Math.ceil(data.length / customerPageSize) || 1;
+            if (customerCurrentPage < totalPages) {
+                customerCurrentPage++;
+                if (customerDataFiltered !== undefined) {
+                    renderCustomerTableFiltered(customerDataFiltered);
+                    updateCustomerPaginationFiltered(customerDataFiltered);
+                } else {
+                    renderCustomerTable();
+                    updateCustomerPagination();
+                }
+            }
+        };
+
+
+        // 打開編輯客戶模態框
+        function openEditCustomerModal(customerId, name, phone, email, date) {
+            document.getElementById('edit-customer-id').value = customerId;
+            document.getElementById('edit-customer-name').value = name;
+            document.getElementById('edit-customer-phone').value = phone;
+            document.getElementById('edit-customer-email').value = email;
+            document.getElementById('edit-customer-date').value = date;
+            document.getElementById('edit-customer-modal').style.display = 'block';
+        }
+
+        // 隱藏編輯模態框
+        function hideEditCustomerModal() {
+            document.getElementById('edit-customer-modal').style.display = 'none';
+        }
+
+        // 提交編輯後的資料
+        document.getElementById('edit-customer-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const customerId = document.getElementById('edit-customer-id').value;
+            const name = document.getElementById('edit-customer-name').value;
+            const phone = document.getElementById('edit-customer-phone').value;
+            const email = document.getElementById('edit-customer-email').value;
+            const date = document.getElementById('edit-customer-date').value;
+
+            fetch('edit-customer.php', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: customerId,
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    date: date
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('客戶更新成功!');
+                        hideEditCustomerModal();
+                        loadCustomerList(); // 更新客戶列表
+                    } else {
+                        alert('更新失敗，請稍後再試。');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        //菜單
+        // 獲取和顯示菜單數據的功能
+        function fetchAndDisplayMenu() {
+            fetch('http://localhost/ouo/get-menu-data.php')
+                .then(response => response.json())
+                .then(data => displayMenu(data))
+                .catch(error => console.error('Error fetching menu data:', error));
+        }
+
+        // 顯示菜單資料
+        function displayMenu(data) {
+            const menuList = document.getElementById('menu-list-content');
+            menuList.innerHTML = '';  // 清空現有內容
+
+            // SetMeals 表格
+            menuList.innerHTML += `
+                <table border="1" cellspacing="0" cellpadding="10">
+                    <thead>
+                        <tr>
+                            <th>圖片</th>
+                            <th>名稱</th>
+                            <th>價格</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.SetMeals.map(menu => {
+                            let imageUrl;
+                            switch (menu.MenuName) {
+                                case '豪華波奇': imageUrl = 'http://localhost/ouo/Deluxe%20Poch.jpg'; break;
+                                case '素食波奇': imageUrl = 'http://localhost/ouo/Vegetarian%20Pochi.jpg'; break;
+                                case '簡單波奇': imageUrl = 'http://localhost/ouo/Simple%20Poch.jpg'; break;
+                                default: imageUrl = 'http://localhost/ouo/default-image.jpg';
+                            }
+
+                            // 新增 data-id, data-name, data-price 屬性
+                            return `
+                                <tr>
+                                    <td><img src="${imageUrl}" alt="${menu.MenuName}" height="100"></td>
+                                    <td>${menu.MenuName}</td>
+                                    <td>${menu.Price.toFixed(2)} 元</td>
+                                    <td>
+                                        <button class="toggle-details">查看詳細</button>
+                                        <button class="edit-menu-btn"
+                                            data-id="${menu.MenuID || menu.id || ''}"
+                                            data-name="${menu.MenuName}"
+                                            data-price="${menu.Price}">
+                                            編輯
+                                        </button>
+                                        <div class="menu-details" style="display: none;">
+                                            <h5>主要食材:</h5>
+                                            <h5>蛋白質</h5>
+                                            <ul>${menu.ProteinChoices.map(choice => `<li>${choice}</li>`).join('')}</ul>
+                                            <h5>佐料</h5>
+                                            <ul>${menu.SideChoices.map(choice => `<li>${choice}</li>`).join('')}</ul>
+                                            <h5>醬料</h5>
+                                            <ul>${menu.SauceChoices.map(choice => `<li>${choice}</li>`).join('')}</ul>
+                                            <h5>灑料</h5>
+                                            <ul>${menu.SprinkleChoices.map(choice => `<li>${choice}</li>`).join('')}</ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            // 自選項目表格（清晰分類）
+            menuList.innerHTML += `
+                <table border="1" cellspacing="0" cellpadding="10">
+                    <thead><tr><th colspan="2">自己選 (200元起)</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <th>基底 (必選一個)</th>
+                            <td>${data.CustomOptions.BaseChoices.join('、')}</td>
+                        </tr>
+                        <tr>
+                            <th>佐料 (最少1個，最多5個)</th>
+                            <td>${data.CustomOptions.SideChoices.join('、')}</td>
+                        </tr>
+                        <tr>
+                            <th>蛋白質 (可選一種或不選)</th>
+                            <td>${data.CustomOptions.ProteinChoices.join('、')}</td>
+                        </tr>
+                        <tr>
+                            <th>醬料 (必選一種)</th>
+                            <td>${data.CustomOptions.SauceChoices.join('、')}</td>
+                        </tr>
+                        <tr>
+                            <th>灑料 (最多選兩種)</th>
+                            <td>${data.CustomOptions.SprinkleChoices.join('、')}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+            // 飲料表格
+            menuList.innerHTML += `
+                <table border="1" cellspacing="0" cellpadding="10">
+                    <thead><tr><th colspan="4">飲料</th></tr></thead>
+                    <tbody>
+                        ${data.Drinks.map(drink => `
+                            <tr>
+                                <td><img src="${drink.Image}" alt="${drink.DrinkName}" height="100"></td>
+                                <td>${drink.DrinkName}</td>
+                                <td>價格: NT$ ${drink.DrinkPrice.toFixed(2)}</td>
+                                <td>
+                                    <button class="edit-drink-btn"
+                                        data-id="${drink.DrinkID || drink.id || ''}"
+                                        data-name="${drink.DrinkName}"
+                                        data-price="${drink.DrinkPrice}">
+                                        編輯
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            // 顯示甜度與冰塊選項
+            menuList.innerHTML += `
+                <table border="1" cellspacing="0" cellpadding="10">
+                    <thead><tr><th colspan="2">飲料選項</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <th>甜度選擇</th>
+                            <td>${data.SweetnessOptions.join('、')}</td>
+                        </tr>
+                        <tr>
+                            <th>冰塊選擇</th>
+                            <td>${data.IceOptions.join('、')}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+
+            // 詳細資料的顯示與隱藏功能
+            document.querySelectorAll('.toggle-details').forEach(button => {
+                button.addEventListener('click', () => {
+                    const details = button.nextElementSibling;
+                    if (details.style.display === 'none') {
+                        details.style.display = 'block';
+                        button.textContent = '收起詳細';
+                    } else {
+                        details.style.display = 'none';
+                        button.textContent = '查看詳細';
+                    }
+                });
+            });
+
+            // 新增：點擊「編輯」自動帶入欄位
+            document.querySelectorAll('.edit-menu-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('update-menu-id').value = this.dataset.id;
+                    document.getElementById('update-menu-name').value = this.dataset.name;
+                    document.getElementById('update-menu-price').value = this.dataset.price;
+                    // 自動切換到編輯區塊
+                    showSection('menu-list');
+                });
+            });
+
+            // 點擊「編輯」飲料自動帶入欄位
+            document.querySelectorAll('.edit-drink-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('update-drink-id').value = this.dataset.id;
+                    document.getElementById('update-drink-name').value = this.dataset.name;
+                    document.getElementById('update-drink-price').value = this.dataset.price;
+                    showSection('menu-list');
+                });
+            });
+        }
+
+        // 封裝取得與顯示菜單的函式
+        function fetchAndDisplayMenu() {
+            fetch('http://localhost/ouo/get-menu-data.php')
+                .then(response => response.json())
+                .then(data => displayMenu(data))
+                .catch(error => console.error('Error fetching menu data:', error));
+        }
+
+        // 搜尋功能
+        document.getElementById('search-button').addEventListener('click', () => {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            fetch('http://localhost/ouo/get-menu-data.php')
+                .then(res => res.json())
+                .then(data => {
+                    const filteredMenu = {
+                        SetMeals: data.SetMeals.filter(menu => menu.MenuName.toLowerCase().includes(searchTerm)),
+                        CustomOptions: data.CustomOptions,
+                        Drinks: data.Drinks
+                    };
+                    displayMenu(filteredMenu);
+                })
+                .catch(console.error);
+        });
+
+        // 修改菜單項目功能（連接 PHP）
+        document.getElementById('update-button').addEventListener('click', () => {
+            const id = parseInt(document.getElementById('update-menu-id').value);
+            const name = document.getElementById('update-menu-name').value.trim();
+            const price = parseFloat(document.getElementById('update-menu-price').value);
+
+            if (isNaN(id) || !name || isNaN(price) || price <= 0) {
+                alert('請輸入有效的菜單 ID、名稱和價格！');
+                return;
+            }
+
+            fetch('http://localhost/ouo/update-menu.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, name, price })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    alert('菜單項目修改成功！');
+                    fetchAndDisplayMenu(); // 成功後重新抓資料
+                } else {
+                    alert('修改菜單項目失敗：' + (result.error || '未知錯誤'));
+                }
+            })
+            .catch(error => {
+                console.error('修改錯誤:', error);
+                alert('修改時發生錯誤！');
+            });
+        });
+
+
+        // 初始載入菜單
+        fetchAndDisplayMenu();
+
+
+        //連接php的範例
+        /* fetch('manage1.php')
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // data 包含從 PHP API 回傳的 JSON 資料
+                console.log(data);
+                // 在這裡處理 JSON 資料，例如更新網頁內容
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            }); */
+
+        //切換下拉列表顯示
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var button = dropdown.previousElementSibling;
+
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+                button.setAttribute('aria-expanded', 'false');
+            } else {
+                closeAllDropdowns();
+                dropdown.style.display = 'block';
+                button.setAttribute('aria-expanded', 'true');
+            }
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('button')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+        }
+
+        //關閉所有下拉列表
+        function closeAllDropdowns() {
+            var dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(function (dropdown) {
+                dropdown.style.display = 'none';
+            });
+            var buttons = document.querySelectorAll('.navbar button');
+            buttons.forEach(function (button) {
+                button.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        //顯示特定部分
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.dashboard');
+            sections.forEach(function (section) {
+                section.classList.remove('active');
+            });
+            var section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+        }
+
+        function handleHashChange() {
+            var sectionId = location.hash.substring(1);
+            if (!sectionId) {
+                sectionId = 'home';
+            }
+            showSection(sectionId);
+        }
+
+        document.addEventListener('click', function (event) {
+            var isClickInside = event.target.closest('.dropdown') !== null;
+            if (!isClickInside) {
+                closeAllDropdowns();
+            }
+        });
+
+        //初始化導航鏈接
+        document.querySelectorAll('.navbar a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                var target = this.getAttribute('href').substring(1);
+                showSection(target);
+            });
+        });
+
+        window.addEventListener('hashchange', handleHashChange);
+
+        //初始化儀表板
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!location.hash) {
+                location.hash = '#home';
+            }
+            handleHashChange();
+            createChart('salesTrend', ['一', '二', '三', '四', '五', '六', '日'], [15, 23, 8, 12, 5, 7, 11], '銷售額');
+            createChart('inventoryLevels', ['一', '二', '三', '四', '五', '六', '日'], [50, 45, 60, 55, 40, 42, 50], '庫存');
+        });
+
+        //搜尋功能
+        function filterTable() {
+            const input = document.getElementById("search-input");
+            const filter = input.value.toLowerCase();
+            const tbody = document.getElementById("customer-tbody");
+            const tr = tbody.getElementsByTagName("tr");
+
+            for (let i = 0; i < tr.length; i++) {
+                let tdArray = tr[i].getElementsByTagName("td");
+                let display = false;
+                for (let j = 0; j < tdArray.length; j++) {
+                    let td = tdArray[j];
+                    if (td) {
+                        if (td.textContent.toLowerCase().indexOf(filter) > -1) {
+                            display = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = display ? "" : "none";
+            }
+        }
+        //排序表功能
+        function sortTable(n) {
+            let table = document.querySelector("table");
+            let rows = table.rows;
+            let switching = true;
+            let shouldSwitch, i, x, y;
+            let dir = "asc";
+            let switchCount = 0;
+
+            while (switching) {
+                switching = false;
+                let rowsArray = Array.from(rows).slice(1); // Exclude the header row
+                for (i = 0; i < rowsArray.length - 1; i++) {
+                    shouldSwitch = false;
+                    x = rowsArray[i].getElementsByTagName("TD")[n];
+                    y = rowsArray[i + 1].getElementsByTagName("TD")[n];
+                    if (dir === "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir === "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rowsArray[i].parentNode.insertBefore(rowsArray[i + 1], rowsArray[i]);
+                    switching = true;
+                    switchCount++;
+                } else {
+                    if (switchCount === 0 && dir === "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        //創建圖表
+        function createChart(canvasId, labels, data, label) {
+            var ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        //66666 保存設置
+        document.addEventListener('DOMContentLoaded', function () {
+            // 讀取已保存的設置
+            if (localStorage.getItem('language')) {
+                document.getElementById('language').value = localStorage.getItem('language');
+            }
+            if (localStorage.getItem('timezone')) {
+                document.getElementById('timezone').value = localStorage.getItem('timezone');
+            }
+            if (localStorage.getItem('currency')) {
+                document.getElementById('currency').value = localStorage.getItem('currency');
+            }
+
+            // 添加點擊事件處理程序
+            document.getElementById('save-settings-btn').addEventListener('click', function (event) {
+                event.preventDefault(); // 阻止按鈕的默認行為
+
+                let language = document.getElementById('language').value;
+                let timezone = document.getElementById('timezone').value;
+                let currency = document.getElementById('currency').value;
+
+                // 保存設置到 localStorage
+                localStorage.setItem('language', language);
+                localStorage.setItem('timezone', timezone);
+                localStorage.setItem('currency', currency);
+
+                console.log('語言:', language);
+                console.log('時區:', timezone);
+                console.log('貨幣單位:', currency);
+
+                alert('設置已保存！'); // 提交表單後顯示提示框
+            });
+        });
+
+        // ====== 自動登出功能（閒置10分鐘自動跳轉）======
+        let logoutTimer;
+        function resetLogoutTimer() {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(() => {
+                alert('您已閒置過久，系統將自動登出。');
+                window.location.href = 'logout.php';
+            }, 10 * 60 * 1000); // 10分鐘
+        }
+        ['click','mousemove','keydown','scroll','touchstart'].forEach(evt =>
+            document.addEventListener(evt, resetLogoutTimer)
+        );
+        resetLogoutTimer();
+        // ====== 自動登出功能結束 ======
+
+    </script>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: grid;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item select {
+            width: 80%;
+        }
+
+        .removeMenuItem {
+            padding: 5px 10px;
+            background-color: #f44336;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .removeMenuItem:hover {
+            background-color: #d32f2f;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .menu-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .menu-item select {
+                width: 100%;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+
+        .back-btn {
+            margin: 20px 0;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        .table-container table {
+            min-width: 800px; /* 根據你的欄位數量自行調整 */
+        }
+
+    </style>
+</head>
+<body>
+    <a href="javascript:history.back()" class="back-btn">回到上一頁</a>
+
+    <div class="container">
+        <h1>訂單管理</h1>
+        
+        <form id="orderForm">
+            <label for="customerName">姓名:</label>
+            <input type="text" id="customerName" required>
+
+            <label for="customerPhone">電話:</label>
+            <input type="tel" id="customerPhone" required>
+
+            <label for="tableNumber">桌號:</label>
+            <input type="text" id="tableNumber" required>
+
+            <label for="startDateTime">開始日期與時間:</label>
+            <input type="datetime-local" id="startDateTime" required>
+
+            <label for="endDateTime">結束日期與時間:</label>
+            <input type="datetime-local" id="endDateTime" required>
+
+            <label for="orderStatus">訂單狀態:</label>
+            <select id="orderStatus" required>
+                <option value="">請選擇狀態</option>
+                <option value="待處理">待處理</option>
+                <option value="正在處理">正在處理</option>
+                <option value="已完成">已完成</option>
+                <option value="已取消">已取消</option>
+            </select>
+
+            <h2>選擇菜單</h2>
+            <div id="menuItems"></div>
+            <button type="button" id="addMenuItem">加菜</button>
+
+            <h2>選擇飲料</h2>
+            <div id="drinkItems"></div>
+            <button type="button" id="addDrinkItem">加飲料</button>
+
+            <button type="submit">提交</button>
+        </form>
+
+        <h2>現有訂單</h2>
+        <div class="table-container">
+            <table id="orderList">
+                <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>姓名</th>
+                        <th>電話</th>
+                        <th>桌號</th> <!-- ✅ 新增 -->
+                        <th>開始時間</th>
+                        <th>結束時間</th>
+                        <th>狀態</th>
+                        <th>菜品 / 飲料</th>
+                        <th>總價</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="pagination" style="text-align: center; margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        // 飲料價格表
+        const drinkPrices = {
+            "四季春冷泡茶": 40,
+            "柚香清茶": 45,
+            "無糖豆漿": 50,
+            "紅茶": 35
+        };
+        const sweetnessOptions = ["全糖", "少糖", "半糖", "微糖", "無糖"];
+        const iceOptions = ["正常冰", "少冰", "微冰", "去冰", "常溫", "熱"];
+
+        const drinkItemsContainer = document.createElement('div');
+        drinkItemsContainer.id = 'drinkItems';
+        document.getElementById('orderForm').insertBefore(drinkItemsContainer, document.getElementById('addDrinkItem'));
+
+        function addDrinkItem(selected = {}) {
+            const drinkDiv = document.createElement('div');
+            drinkDiv.className = 'menu-item';
+
+            // 飲料選單
+            let drinkHtml = `<select name="drinkChoice" required>
+                <option value="">請選擇飲料</option>`;
+            for (const drink in drinkPrices) {
+                drinkHtml += `<option value="${drink}" ${selected.drink === drink ? 'selected' : ''}>${drink}</option>`;
+            }
+            drinkHtml += `</select>`;
+
+            // 甜度選單
+            let sweetHtml = `<select name="sweetness" required>`;
+            for (const s of sweetnessOptions) {
+                sweetHtml += `<option value="${s}" ${selected.sweetness === s ? 'selected' : ''}>${s}</option>`;
+            }
+            sweetHtml += `</select>`;
+
+            // 冰塊選單
+            let iceHtml = `<select name="ice" required>`;
+            for (const i of iceOptions) {
+                iceHtml += `<option value="${i}" ${selected.ice === i ? 'selected' : ''}>${i}</option>`;
+            }
+            iceHtml += `</select>`;
+
+            drinkDiv.innerHTML = `
+                <label>飲料:</label>${drinkHtml}
+                <label>甜度:</label>${sweetHtml}
+                <label>冰塊:</label>${iceHtml}
+                <button type="button" class="removeDrinkItem">移除</button>
+            `;
+
+            drinkItemsContainer.appendChild(drinkDiv);
+
+            drinkDiv.querySelector('.removeDrinkItem').onclick = () => {
+                drinkItemsContainer.removeChild(drinkDiv);
+            };
+        }
+
+        document.getElementById('addDrinkItem').onclick = () => addDrinkItem();
+
+        // 修改送出資料格式
+        document.getElementById('orderForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // ...主餐資料...
+            const menuItems = Array.from(document.querySelectorAll('select[name="menuChoice"]'))
+                .map(s => s.value)
+                .filter(v => v !== '');
+
+            // 飲料資料
+            const drinkItems = Array.from(document.querySelectorAll('#drinkItems .menu-item')).map(div => {
+                return {
+                    drink: div.querySelector('select[name="drinkChoice"]').value,
+                    sweetness: div.querySelector('select[name="sweetness"]').value,
+                    ice: div.querySelector('select[name="ice"]').value
+                };
+            }).filter(d => d.drink);
+
+            if (menuItems.length === 0) {
+                alert('請至少選擇一項菜單');
+                return;
+            }
+
+            // 你可以根據後端需求調整資料格式
+            const orderData = {
+                name: document.getElementById('customerName').value.trim(),
+                phone: document.getElementById('customerPhone').value.trim(),
+                tableNumber: document.getElementById('tableNumber').value.trim(),
+                startTime: document.getElementById('startDateTime').value,
+                endTime: document.getElementById('endDateTime').value,
+                status: document.getElementById('orderStatus').value,
+                menuItems,
+                drinkItems // 新增飲料資料
+            };
+
+            // ...後續送出 fetch ...
+        });
+
+        // 重設表單時也要重設飲料
+        function resetForm() {
+            document.getElementById('orderForm').reset();
+            menuItemsContainer.innerHTML = '';
+            drinkItemsContainer.innerHTML = '';
+            addMenuItem();
+            addDrinkItem();
+            editingOrderID = null;
+        }
+
+        // 預設加一個飲料
+        addDrinkItem();
+        
+        // 儲存目前編輯的訂單ID，null 表示新增
+        let editingOrderID = null;
+        let allOrders = []; // 存所有訂單資料
+        const ORDERS_PER_PAGE = 5;
+        let currentPage = 1;
+
+        // 菜單價格表（有新菜請直接新增這裡）
+        const menuPrices = {
+            "豪華波奇": 360,
+            "素食波奇": 260,
+            "簡單波奇": 230,
+            "綜合波奇": 300
+        };
+
+        const menuItemsContainer = document.getElementById('menuItems');
+        const addMenuItemButton = document.getElementById('addMenuItem');
+
+        // 從後端載入訂單列表並顯示
+        function loadOrdersFromServer() {
+            fetch('get-orders.php')
+                .then(res => res.json())
+                .then(orders => {
+                    allOrders = orders;
+                    currentPage = 1;
+                    renderOrdersWithPagination();
+                })
+                .catch(err => console.error('Error loading orders:', err));
+        }
+
+        function renderOrdersWithPagination() {
+            const tbody = document.querySelector('#orderList tbody');
+            tbody.innerHTML = '';// 清空訂單列表
+            const startIndex = (currentPage - 1) * ORDERS_PER_PAGE;
+            const endIndex = startIndex + ORDERS_PER_PAGE;
+            const currentOrders = allOrders.slice(startIndex, endIndex);
+
+            currentOrders.forEach(order => {
+                let menuItems = [];
+                try {
+                    menuItems = JSON.parse(order.menuChoices);
+                } catch {
+                    menuItems = order.menuChoices ? order.menuChoices.split(',') : [];
+                }
+                let displayItems = '';
+                let totalPrice = 0;
+
+                try {
+                    const parsed = JSON.parse(order.menuChoices);
+
+                    parsed.forEach(item => {
+                        if (item.product) {
+                            if (item.product.drink) {
+                                // 飲料項目
+                                const drink = item.product.drink;
+                                displayItems += `<strong>飲料:</strong> ${drink.name}<br>`;
+                                displayItems += `甜度: ${drink.sweetness}, 冰塊: ${drink.ice}<br>`;
+                                displayItems += `價格: $${item.price}<br><br>`;
+                                totalPrice += item.price;
+                            } else {
+                                // 自由配菜單格式
+                                for (const type in item.product) {
+                                    if (Array.isArray(item.product[type]) && item.product[type].length) {
+                                        displayItems += `<strong>${type}:</strong> ${item.product[type].join(', ')}<br>`;
+                                    }
+                                }
+                                displayItems += `價格: $${item.price}<br><br>`;
+                                totalPrice += item.price;
+                            }
+                        } else {
+                            // 單純字串菜單
+                            displayItems += `${item}<br>`;
+                            totalPrice += menuPrices[item] || 0;
+                        }
+                    });
+                } catch (e) {
+                    // 解析失敗顯示原始資料
+                    displayItems = order.menuChoices;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${order.OrderID}</td>
+                    <td>${order.customerName}</td>
+                    <td>${order.customerPhone}</td>
+                    <td>${order.tableNumber || '-'}</td>
+                    <td>${formatDateTime(order.startDateTime)}</td>
+                    <td>${formatDateTime(order.endDateTime)}</td>
+                    <td>${order.orderStatus}</td>
+                    <td>${displayItems}</td>
+                    <td>$${totalPrice}</td>
+                    <td><button onclick="editOrder(${order.OrderID})">編輯</button></td>
+                `;
+
+                tbody.appendChild(row);
+            });
+
+            renderPaginationButtons();
+        }
+
+
+        function renderPaginationButtons() {
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+
+            const totalPages = Math.ceil(allOrders.length / ORDERS_PER_PAGE);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.style.margin = '0 5px';
+                btn.style.padding = '6px 12px';
+                btn.style.borderRadius = '5px';
+                btn.style.border = '1px solid #ccc';
+                btn.style.backgroundColor = (i === currentPage) ? '#4CAF50' : '#fff';
+                btn.style.color = (i === currentPage) ? '#fff' : '#333';
+                btn.style.cursor = 'pointer';
+
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderOrdersWithPagination();
+                });
+
+                paginationDiv.appendChild(btn);
+            }
+        }
+
+        // 計算菜單項目總價
+        function calculateTotalPrice(menuItems) {
+            return menuItems.reduce((total, item) => total + (menuPrices[item] || 0), 0);
+        }
+
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return '';
+            const dt = new Date(dateTimeStr);
+            return `${dt.toLocaleDateString()} ${dt.toLocaleTimeString()}`;
+        }
+
+        function editOrder(orderID) {
+            fetch(`get-order.php?OrderID=${orderID}`)
+                .then(res => res.json())
+                .then(res => {
+                    if (!res.success) {
+                        alert('找不到訂單資料');
+                        return;
+                    }
+                    const order = res.order;
+                    editingOrderID = order.OrderID;
+
+                    document.getElementById('customerName').value = order.customerName;
+                    document.getElementById('customerPhone').value = order.customerPhone;
+                    document.getElementById('tableNumber').value = order.tableNumber || '';
+                    document.getElementById('startDateTime').value = order.startDateTime?.slice(0, 16) || '';
+                    document.getElementById('endDateTime').value = order.endDateTime?.slice(0, 16) || '';
+                    document.getElementById('orderStatus').value = order.orderStatus;
+
+                    menuItemsContainer.innerHTML = '';
+                    let menuItems = [];
+                    try {
+                        menuItems = JSON.parse(order.menuChoices);
+                    } catch {
+                        menuItems = order.menuChoices ? order.menuChoices.split(',') : [];
+                    }
+                    menuItems.forEach(item => addMenuItem(item));
+                })
+                .catch(err => console.error('Error loading single order:', err));
+        }
+
+        function addMenuItem(selectedValue = '') {
+            const menuItemDiv = document.createElement('div');
+            menuItemDiv.className = 'menu-item';
+
+            let optionsHtml = `<option value="" ${selectedValue === '' ? 'selected' : ''}>請選擇菜單</option>`;
+            for (const menuName in menuPrices) {
+                optionsHtml += `<option value="${menuName}" ${selectedValue === menuName ? 'selected' : ''}>${menuName}</option>`;
+            }
+
+            menuItemDiv.innerHTML = `
+                <label for="menuChoice">菜單:</label>
+                <select name="menuChoice" required>${optionsHtml}</select>
+                <button type="button" class="removeMenuItem">移除</button>
+            `;
+
+            menuItemsContainer.appendChild(menuItemDiv);
+
+            menuItemDiv.querySelector('.removeMenuItem').addEventListener('click', () => {
+                menuItemsContainer.removeChild(menuItemDiv);
+            });
+        }
+
+        addMenuItemButton.addEventListener('click', () => addMenuItem());
+
+        document.getElementById('orderForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const orderData = {
+                name: document.getElementById('customerName').value.trim(),
+                phone: document.getElementById('customerPhone').value.trim(),
+                startTime: document.getElementById('startDateTime').value,
+                endTime: document.getElementById('endDateTime').value,
+                status: document.getElementById('orderStatus').value,
+                menuItems: Array.from(document.querySelectorAll('select[name="menuChoice"]'))
+                    .map(s => s.value)
+                    .filter(v => v !== '')
+            };
+
+            if (orderData.menuItems.length === 0) {
+                alert('請至少選擇一項菜單');
+                return;
+            }
+
+            const endpoint = editingOrderID === null ? 'add-order.php' : 'edit-order.php';
+            const method = 'POST';
+            if (editingOrderID !== null) orderData.OrderID = editingOrderID;
+
+            fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    alert(editingOrderID === null ? '新增成功' : '修改成功');
+                    resetForm();
+                    loadOrdersFromServer();
+                } else {
+                    alert((editingOrderID === null ? '新增' : '修改') + '失敗: ' + res.message);
+                }
+            })
+            .catch(err => console.error(err));
+        });
+
+        function resetForm() {
+            document.getElementById('orderForm').reset();
+            menuItemsContainer.innerHTML = '';
+            addMenuItem();
+            editingOrderID = null;
+        }
+
+        loadOrdersFromServer();
+        addMenuItem();
+    </script>
+</body>
+</html>

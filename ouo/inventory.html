@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>庫存異動表</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h2 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .controls { text-align: center; margin: 20px; }
+        .controls input, .controls button { padding: 5px 10px; margin-right: 5px; }
+
+        /* 新增異動記錄區塊樣式 */
+        .add-form {
+            margin: 20px auto;
+            max-width: 700px;
+            text-align: center;
+        }
+        .add-form h3 {
+            margin-bottom: 15px;
+        }
+        .add-form .form-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .add-form input,
+        .add-form select,
+        .add-form button {
+            padding: 8px 12px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 120px;
+        }
+        .add-form button {
+            flex: 0 0 100px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .add-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>庫存異動表</h2>
+
+    <!-- Control Panel for Filtering and Exporting -->
+    <div class="controls">
+        <label for="date-filter">日期篩選:</label>
+        <input type="date" id="date-filter" onchange="filterByDate()">
+        
+        <label for="search-bar">搜尋:</label>
+        <input type="text" id="search-bar" placeholder="輸入商品名稱或異動類型" onkeyup="searchTable()">
+        
+        <button onclick="exportToCSV()">匯出為 CSV</button>
+    </div>
+
+    <!-- Inventory Transaction Table -->
+    <table id="inventoryTable">
+        <thead>
+            <tr>
+                <th>日期</th>
+                <th>商品編號</th>
+                <th>商品名稱</th>
+                <th>異動類型</th>
+                <th>異動數量</th>
+                <th>交易對象</th>
+                <th>單價</th>
+                <th>總金額</th>
+                <th>備註</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2024-10-01</td>
+                <td>1001</td>
+                <td>玉子燒</td>
+                <td>進貨</td>
+                <td>+50</td>
+                <td>供應商A</td>
+                <td>5.00</td>
+                <td>250.00</td>
+                <td>補貨</td>
+            </tr>
+            <tr>
+                <td>2024-10-03</td>
+                <td>1001</td>
+                <td>鮭魚</td>
+                <td>銷售</td>
+                <td>-30</td>
+                <td>客戶B</td>
+                <td>5.00</td>
+                <td>-150.00</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2024-10-05</td>
+                <td>1002</td>
+                <td>豆腐</td>
+                <td>退貨</td>
+                <td>+10</td>
+                <td>客戶C</td>
+                <td>3.00</td>
+                <td>30.00</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2024-10-06</td>
+                <td>1003</td>
+                <td>毛豆仁</td>
+                <td>報廢</td>
+                <td>-5</td>
+                <td></td>
+                <td>2.50</td>
+                <td>-12.50</td>
+                <td>過期</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 新增異動記錄表單 -->
+    <div class="add-form">
+        <h3>新增異動記錄</h3>
+        <div class="form-row">
+            <input type="date" id="new-date" required />
+            <input type="text" id="new-product-id" placeholder="商品編號" required />
+            <input type="text" id="new-product-name" placeholder="商品名稱" required />
+        </div>
+        <div class="form-row">
+            <select id="new-change-type" required>
+                <option value="">異動類型</option>
+                <option value="進貨">進貨</option>
+                <option value="銷售">銷售</option>
+                <option value="退貨">退貨</option>
+                <option value="報廢">報廢</option>
+            </select>
+            <input type="number" id="new-change-qty" placeholder="異動數量" required min="1" />
+            <input type="text" id="new-counterparty" placeholder="交易對象" />
+        </div>
+        <div class="form-row">
+            <input type="number" id="new-unit-price" step="0.01" placeholder="單價" required />
+            <input type="text" id="new-note" placeholder="備註" />
+            <button onclick="addRecord()">新增</button>
+        </div>
+    </div>
+
+    <button onclick="goBack()" style="padding: 10px 20px; font-size: 16px;">
+        <i class="fas fa-arrow-left"></i> 回到上一頁
+    </button>
+
+    <script>
+        // 點擊按鈕時回到上一頁
+        function goBack() {
+            window.history.back();
+        }
+
+        // 過濾表按日期
+        function filterByDate() {
+            const date = document.getElementById("date-filter").value;
+            const rows = document.querySelectorAll("#inventoryTable tbody tr");
+            rows.forEach(row => {
+                const rowDate = row.cells[0].textContent;
+                row.style.display = rowDate === date || !date ? "" : "none";
+            });
+        }
+
+        // 按產品名稱或交易類型搜尋表
+        function searchTable() {
+            const searchValue = document.getElementById("search-bar").value.toLowerCase();
+            const rows = document.querySelectorAll("#inventoryTable tbody tr");
+            rows.forEach(row => {
+                const productName = row.cells[2].textContent.toLowerCase();
+                const changeType = row.cells[3].textContent.toLowerCase();
+                row.style.display = productName.includes(searchValue) || changeType.includes(searchValue) ? "" : "none";
+            });
+        }
+
+        // Export table to CSV
+        function exportToCSV() {
+            let csv = "日期,商品編號,商品名稱,異動類型,異動數量,交易對象,單價,總金額,備註\n";
+            const rows = document.querySelectorAll("#inventoryTable tbody tr");
+            rows.forEach(row => {
+                const cols = row.querySelectorAll("td");
+                const rowData = Array.from(cols).map(td => td.textContent).join(",");
+                csv += rowData + "\n";
+            });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.setAttribute("href", URL.createObjectURL(blob));
+            link.setAttribute("download", "庫存異動表.csv");
+            link.style.display = "none";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 新增異動記錄的功能
+        function addRecord() {
+            const date = document.getElementById("new-date").value;
+            const productId = document.getElementById("new-product-id").value.trim();
+            const productName = document.getElementById("new-product-name").value.trim();
+            const changeType = document.getElementById("new-change-type").value;
+            let changeQty = document.getElementById("new-change-qty").value;
+            const counterparty = document.getElementById("new-counterparty").value.trim();
+            const unitPrice = document.getElementById("new-unit-price").value;
+            const note = document.getElementById("new-note").value.trim();
+
+            if (!date || !productId || !productName || !changeType || !changeQty || !unitPrice) {
+                alert("請填寫所有必填欄位");
+                return;
+            }
+
+            // 強制異動數量為正數
+            changeQty = Math.abs(parseFloat(changeQty));
+
+            // 根據異動類型決定正負號
+            let displayQty = changeQty;
+            let totalAmount = changeQty * parseFloat(unitPrice);
+            if (changeType === "銷售" || changeType === "報廢") {
+                displayQty = -changeQty;
+                totalAmount = -changeQty * parseFloat(unitPrice);
+            }
+
+            // 顯示時加上正負號
+            const displayQtyStr = (displayQty > 0 ? "+" : "") + displayQty;
+
+            const tbody = document.querySelector("#inventoryTable tbody");
+            const newRow = document.createElement("tr");
+
+            newRow.innerHTML = `
+                <td>${date}</td>
+                <td>${productId}</td>
+                <td>${productName}</td>
+                <td>${changeType}</td>
+                <td>${displayQtyStr}</td>
+                <td>${counterparty}</td>
+                <td>${parseFloat(unitPrice).toFixed(2)}</td>
+                <td>${totalAmount.toFixed(2)}</td>
+                <td>${note}</td>
+            `;
+
+            tbody.appendChild(newRow);
+
+            // 新增後清空欄位
+            document.getElementById("new-date").value = "";
+            document.getElementById("new-product-id").value = "";
+            document.getElementById("new-product-name").value = "";
+            document.getElementById("new-change-type").value = "";
+            document.getElementById("new-change-qty").value = "";
+            document.getElementById("new-counterparty").value = "";
+            document.getElementById("new-unit-price").value = "";
+            document.getElementById("new-note").value = "";
+        }
+    </script>
+
+</body>
+</html>

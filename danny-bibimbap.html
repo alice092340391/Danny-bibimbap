@@ -1,0 +1,900 @@
+
+<!DOCTYPE html>
+<body translate="no">
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>丹尼夏威夷拌飯</title>
+    <link rel="apple-touch-icon" type="image/png" href="img/下載 (3).jpg">
+    <link rel="shortcut icon" type="image/x-icon" href="img/下載 (3).jpg">
+    <link rel="mask-icon" type="image/x-icon" href="img/下載 (3).jpg" color="#111">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    
+   
+        @font-face {
+        font-family: Lemon-Regular;
+        src: url(Lemon-Regular.ttf) format("opentype");
+    }
+
+        @import url("");
+
+            *,
+            *::after,
+            *::before {
+                box-sizing: border-box;
+                margin: 0px;
+            }
+
+            .html {
+                font-size: 62.5%; 
+            }
+
+            body {
+                font-family:"Lemon", serif ;
+                font-weight: 400;
+                font-style: normal;
+                padding: 0;
+                display: inline;
+
+                background-attachment: fixed;
+                
+            }
+            #contents {
+                width: 100%;
+                max-width: 1700px;
+                background-image: url(img/green.png);
+                height: auto;
+                
+            }
+
+            
+        a{ text-decoration:none} 
+        a:hover{ text-decoration:none}
+
+
+            .main-header .container{
+                display: flex;
+                align-items: center;
+                padding: 20px;
+                max-width: 1200px;
+                margin: auto;
+            }
+            .main-header .main-nav{
+                margin: auto;
+                margin-right: 20px;
+            }
+            .main-header .main-nav a{
+                text-decoration: none;
+                color: #fff;
+                padding: 5px 1em;
+                position: relative;
+            }
+
+            .main-header .header-search{
+                display: flex;
+            }
+
+            .main-header .main-nav a:after{
+                content: '';
+                position: absolute;
+                left: 50%;
+                right: 50%;
+                height: 0;
+                bottom: -5px;
+                border-bottom: 1px solid #fff;
+                transition: .3s;
+            }
+
+            .main-header .main-nav a:hover:after{
+                left:0;
+                right:0;
+            }
+
+            .main-header .header-search input,
+            .main-header .header-search button{
+                border:none;
+                background-color: #fff;
+                padding: 5px 10px;
+            }
+
+            .main-header .header-search input:focus,
+            .main-header .header-search button:focus{
+                outline: none;
+            }
+
+
+            .main-header .header-search button{
+                border-radius: 0 200px 200px 0;
+            }
+
+            input{
+                        border-radius: 200px 0 0 200px;
+                    } 
+
+                .credit{
+                    text-align: center;
+                    font-weight: 300;
+                    font-size: 14px;
+                    margin-top: 5px;
+                }
+
+
+
+
+            /* ///////////..utility classes../////////// */
+            
+
+
+            .container {
+                max-width: 1520px;
+                width: 100%;
+                margin: auto;
+                justify-content: right;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                padding: 20px;
+                margin-left: 0px;
+                padding-left: 0px;
+                margin-right: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+                position: relative;  
+        
+            }
+
+            
+
+          
+    /* desktop mode............/// */
+
+            .navbar-container {
+                display: flex;
+                justify-content: space-between;
+                font-weight:bold;
+                font-size: 20px;
+                height: 64px;
+                align-items: center;
+            }
+
+            .menu-items {
+                order: 2;
+                display: flex;
+            }
+
+            .menu-items li {
+                list-style: none;
+                margin-left: 1.5rem;
+                margin-bottom: 3rem;
+                text-align:left;
+                font-size: 1.2rem;
+            }
+
+            .menu-items a {
+                text-decoration: none;
+                color: #191919;
+                transition: color 1s ;
+                font-size: 25px;
+            }
+
+            .menu-items a:hover {
+                color: #ffffff;
+                font-weight: bold;
+                transition: color 2s ease-in-out;
+            }
+
+            .logo {
+                order: 1;
+                font-size: 2.3rem;
+                margin-bottom: 0.5rem;
+                line-height: 120px;
+            }
+            /* ............//// Showcase styling ////......... */
+
+            .showcase-area {
+                background-repeat: no-repeat;
+            }
+
+            .showcase-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height:315px;
+                font-size: 1.4rem;
+                font-weight:bold;
+                text-align: center;
+                
+            }
+
+            .showcase-container img {
+            width: auto;
+        }
+        
+        .main-title {
+                text-transform: uppercase;
+                padding-top: 20px;
+                text-shadow: 6px 6px 0px rgb(45 39 39 / 0%);
+                margin-left: 26px;
+                margin-right: 20px;
+            }
+            
+            
+
+            /* ......//about us//...... */
+
+        
+
+            @keyframes about-img-animation {
+                100% {
+                    transform: translate(0);
+                }
+            }
+
+            .about-text {
+                flex: 1 1 400px;
+                padding: 30px;
+                margin: auto;
+                transform: translate(-150%);
+                animation: about-text-animation 1s ease-in-out forwards;
+            }
+
+            @keyframes about-text-animation {
+                100% {
+                    transform: translate(0);
+                }
+            }
+
+            .about-img img {
+                display: block;
+                height: 400px;
+                max-width: 100%;
+                margin:0px;
+                object-fit: cover;
+                object-position: right;
+            }
+
+            /* ..........////Food category///........... */
+
+            #food {
+                padding: 5rem 0 10rem 0;
+            }
+
+            #food h2 {
+                text-align: center;
+                font-size: 2.5rem;
+                font-weight: 400;
+                margin-bottom: 40px;
+                text-transform: uppercase;
+                color: #555;
+            }
+
+            .food-container {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .food-container img {
+                display: block;
+                width: 100%;
+                margin: auto;
+                max-height: 300px;
+                object-fit: cover;
+                object-position: center;
+            }
+
+            .img-container {
+                margin: 0 1rem;
+                position: relative;
+            }
+
+            .img-content {
+                position: absolute;
+                top: 70%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                z-index: 2;
+                text-align: center;
+                transition: all 0.3s ease-in-out 0.1s;
+            }
+
+            .img-content h3 {
+                color: #fff;
+                font-size: 2.2rem;
+            }
+
+            .img-content a {
+                font-size: 1.2rem;
+            }
+
+            .img-container::after {
+                content: "";
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.871);
+                opacity: 0;
+                z-index: 1;
+                transform: scaleY(0);
+                transform-origin: 100% 100%;
+                transition: all 0.3s ease-in-out;
+            }
+
+            .img-container:hover::after {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+
+            .img-container:hover .img-content {
+                opacity: 1;
+                top: 40%;
+            }
+
+            /* .........../Food Menu/............ */
+
+            .food-menu-heading {
+                text-align: center;
+                font-size: 3.4rem;
+                font-weight: 400;
+                color: #666;
+            }
+
+            .food-menu-container {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 50px 0px 30px 0px;
+            }
+
+            .food-menu-container img {
+                display: block;
+                width: 250px;
+                height: 250px;
+                border-radius: 50%;
+                object-fit: cover;
+                object-position: center;
+            }
+
+            .food-menu-item {
+                display: flex;
+                flex: 1 1 600px;
+                justify-content: space-evenly;
+                margin-bottom: 3rem;
+            }
+
+            .food-description {
+                margin: auto 1.5rem;
+            }
+
+            .font-title {
+                font-size: 1.8rem;
+                font-weight: 400;
+                color: #444;
+            }
+
+            .food-description p {
+                font-size: 1.4rem;
+                color: #555;
+                font-weight: 500;
+            }
+
+            .food-description .food-price {
+                color: #117964;
+                font-weight: 700;
+            }
+
+            /* ........./ Testimonial /.......... */
+
+            #testimonials {
+                padding: 5rem 0;
+                background: rgba(243, 243, 243);
+            }
+
+            .testimonial-title {
+                text-align: center;
+                font-size: 2.8rem;
+                font-weight: 400;
+                color: #555;
+            }
+
+            .testimonial-container {
+                display: flex;
+                justify-content: space-between;
+                font-size: 1.4rem;
+                padding: 1rem;
+            }
+
+            .testimonial-box .checked {
+                color: #ff9529;
+            }
+
+            .testimonial-box .testimonial-text {
+                margin: 1rem 0;
+                color: #444;
+            }
+
+            .testimonial-box {
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .customer-photo img {
+                display: block;
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                object-position: center;
+                border-radius: 50%;
+                margin: auto;
+            }
+
+            /* ........ Contact Us........... */
+
+            #contact {
+                padding: 5rem 0;
+                background: rgb(226, 226, 226);
+            }
+
+            .contact-container {
+                display: flex;
+                background: #fff;
+            }
+
+            .contact-img {
+                width: 50%;
+            }
+
+            .contact-img img {
+                display: block;
+                height: 400px;
+                width: 100%;
+                object-position: center;
+                object-fit: cover;
+            }
+
+            .form-container {
+                padding: 1rem;
+                width: 50%;
+                margin: auto;
+            }
+
+            .form-container input {
+                display: block;
+                width: 100%;
+                border: none;
+                border-bottom: 2px solid #ddd;
+                padding: 1rem 0;
+                box-shadow: none;
+                outline: none;
+                margin-bottom: 1rem;
+                color: #444;
+                font-weight: 500;
+            }
+
+            .form-container textarea {
+                display: block;
+                width: 100%;
+                border: none;
+                color: #444;
+                outline: none;
+                padding: 1rem 0;
+                resize: none;
+            }
+
+            .form-container h2 {
+                font-size: 2.7rem;
+                font-weight: 500;
+                color: #444;
+                margin-bottom: 1rem;
+                margin-top: -1.2rem;
+            }
+
+            .form-container a {
+                font-size: 1.3rem;
+            }
+
+            .footer {
+            text-align: center;
+            font-size: 1.8rem;
+            padding: 1.6rem;
+            font-weight: 500;
+            color: #fff;
+            background: #014e2a;
+            bottom: 0;
+            border:solid 2px;
+            left: 550px;
+            border-bottom-width: 3px;
+            border-right-width: 0px;
+            border-left-width: 0px;
+        }
+
+        .btn-14,
+        .btn-14 *,
+        .btn-14 :after,
+        .btn-14 :before,
+        .btn-14:after,
+        .btn-14:before {
+        border: 0 solid;
+        box-sizing: border-box;
+        }
+        .btn-14 {
+        -webkit-tap-highlight-color: transparent;
+    
+        background-color: #000;
+        background-image: none;
+        color: #fff;
+        cursor: pointer;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+            Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+            Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        font-size: 100%;
+        font-weight: 900;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+        text-transform: uppercase;
+        }
+        .btn-14:disabled {
+        cursor: default;
+        }
+        .btn-14:-moz-focusring {
+        outline: auto;
+        }
+        .btn-14 svg {
+        display: block;
+        }
+        .btn-14 [hidden] {
+        display: none;
+        }
+        .btn-14 {
+        background: #fff;
+        border-radius: 99rem;
+        border-width: 2px;
+        overflow: hidden;
+        padding: 0.8rem 3rem;
+        position: relative;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-14 span {
+        mix-blend-mode: difference;
+        }
+        .btn-14:hover {
+        box-shadow: 0 20px 100px 1px hsla(0, 0%, 100%, 0.2);
+        transform: translateY(-4px);
+        will-change: box-shadow, transform;
+        }
+
+        .box1{
+            text-align:center;
+            padding:10px;
+            width: 300px;
+            height: 150px;
+            border-color:#fff;
+            margin-top: 20px;
+            margin-left: 40px;
+    
+        }
+        .floating-box-container {
+            display: grid;
+            flex-wrap: wrap;
+            grid-template-columns: repeat(2, 150px);
+            grid-template-rows: repeat(2, 100px);
+            justify-content:center;
+            /* Space between boxes */
+            margin-bottom: 40px;
+            margin-top: 63px;
+        }
+
+        .floating-box {
+            background-color: #1C4425;
+            border: 2px solid #fff;
+            /* Border color */
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            height:100px;
+            /* Adjust width for two boxes in a row */
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            /* Initial shadow */
+
+        }
+
+        .floating-box:hover {
+            transform: translateY(-10px);
+            /* Move up on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            /* Deeper shadow on hover */
+        }
+
+        .floating-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.9rem;
+            color: #fff;
+            padding-top: 30px;
+        }
+
+        .floating-box p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between; /* Distribute items to left and right */
+            align-items: center; /* Align items vertically centered */
+            font-weight: bold;
+            font-size: 20px;
+            height: 64px;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-grow: 1;
+            justify-content: flex-start; /* Start items on the left */
+            list-style: none;
+            padding-left: 0; /* Remove default list padding */
+            margin-top: 50px;
+            margin-left: 250px
+        }
+
+        .menu-items li {
+            margin-left: 1.5rem; /* Space between menu items */
+        }
+
+        .nav-right {
+            margin-left: auto; /* Push the telephone icon to the right */
+            margin-right: 1.5rem; /* Optional: margin from the right edge */
+        }
+
+        .telephone-icon {
+            width: 30px; /* Adjust icon size */
+            height: 30px;
+        }
+
+        /* ......../ media query /.......... */
+
+         /* 平板样式 */
+          @media (max-width: 1024px) {
+            .box {
+                flex: 1 1 calc(50% - 20px); /* 两栏布局 */
+            }
+        }
+
+
+           /* Responsive Design */
+           @media (max-width: 768px) {
+                .menu {
+                    gap: 0.5rem; /* Reduce space between buttons for smaller screens */
+                }
+                .menu-items {
+                flex-direction: column;
+                display: none;
+                width: 100%;
+                background: #333;
+                }
+                .menu-items.active {
+                    display: flex;
+                }
+                .menu-toggle {
+                    display: block;
+                    color: white;
+                }
+                .btn-50 {
+                    padding: 10px 15px;
+                }
+
+                .cart-wrap {
+                padding: 10px 15px; /* 調整內邊距 */
+                font-size: 14px; /* 字體大小調整 */
+                }
+
+
+
+
+            }
+
+            @media (min-width: 600px) {
+                 .cart-wrap {
+                    flex-direction: column; /* 縱向排列，以便在窄螢幕上更易讀 */
+                    padding: 15px; /* 調整內邊距 */
+                    text-align: center; /* 確保文字置中對齊 */
+                }
+            }
+
+            @media (max-width: 480px) {
+                .btn-50 {
+                    padding: 8px 12px; /* Adjust padding for smaller screens */
+                }
+
+                .cart-wrap {
+                padding: 8px 10px; /* 調整內邊距 */
+                font-size: 12px; /* 字體大小調整 */
+                flex-direction: column; /* 讓內容垂直排列 */
+                align-items: center; /* 中央對齊 */
+            }
+
+
+
+            }
+
+
+
+
+
+</style>
+
+<script>
+
+document.getElementById('fetchData').addEventListener('click', async () => {
+      try {
+        // 發送代理請求到 /ouo/api
+        const response = await fetch('http://120.96.63.237/ouo/get-menu-data.php');
+        const data = await response.json();
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        console.error('請求失敗:', error);
+      }
+    });
+
+
+</script>
+
+
+
+</head>
+
+<body>
+    <div id="container" >
+ </header>
+    <main id="contents" style="
+        padding-top: 0px;
+        padding-left: 0px;
+        margin-bottom: 0px;
+
+">
+       <header class="main-header">
+       <section class="showcase-area" id="showcase">
+
+
+      <div class="showcase-container ">
+       
+        <img height="150px" src="img/logle.png" style="
+        margin-top:30px;"></a>
+
+        
+        <h1 class="main-title" id="home" style="color:#ffff">丹尼夏威夷拌飯</h1>
+        <h2 style="color:#ffff">Danny bibimbap</h2>
+        <br>
+
+        <!-- ✅ 新增桌號顯示 -->
+
+        <div id="table-number"style="display: none;"></div>
+    
+        <hr width="100% Color= while "> 
+
+        <br>
+       
+      </div> 
+        <form action="login.php" method="post">
+    <div class="floating-box-container">
+        <div class="floating-box" style="padding-top: 0px;">
+        <a href="../ordering_home_page/ordering-home-page.html">
+            <h3>開始點餐</h3>
+        </a>
+        </div>
+    </div>
+
+    <footer class="footer"></footer>
+    </form>
+
+</main>
+
+<script>
+
+      //改
+           // 從後端獲取菜單數據
+           function fetchMenuData() {
+            fetch('http://120.96.63.237/ouo/get-menu-data.php')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('菜單數據:', data);
+                    // 這裡可以用 data 來動態顯示菜單
+                })
+                .catch(error => {
+                    console.error('獲取菜單數據時出錯:', error);
+                });
+
+             }
+            // 獲取用戶選擇的菜單項目
+            function getSelectedMenuItems() {
+                const selectedMenus = [];
+
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    if (item.querySelector('.menu-checkbox').checked) { // 只抓取已勾選的套餐
+                        selectedMenus.push({
+                            menuId: item.dataset.menuId, // 從 HTML data 屬性獲取菜單 ID
+                            base: item.querySelector('.baseChoice').value,
+                            protein: item.querySelector('.proteinChoice').value,
+                            sauce: item.querySelector('.sauceChoice').value,
+                            sprinkle: item.querySelector('.sprinkleChoice').value
+                        });
+                    }
+                });
+
+                return selectedMenus;
+            }
+
+            // 提交訂單
+            async function submitOrder() {
+                const orderData = {
+                    name: document.getElementById('customerName').value,
+                    phone: document.getElementById('customerPhone').value,
+                    startTime: document.getElementById('startDateTime').value,
+                    endTime: document.getElementById('endDateTime').value,
+                    status: document.getElementById('orderStatus').value,
+                    order: getSelectedMenuItems() // 這裡直接獲取菜單選項
+                };
+
+                console.log(orderData);  // 測試輸出確認格式正確
+
+                try {
+                    const response = await fetch('http://120.96.63.237/ouo/add-to-order.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(orderData)
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('訂單提交成功！');
+                    } else {
+                        alert('提交失敗: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('提交訂單時發生錯誤:', error);
+                }
+            }
+
+                // 當頁面載入時執行
+                window.addEventListener('load', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const tableNumber = urlParams.get('table');
+                const tableEl = document.getElementById('table-number');
+                const orderLink = document.getElementById('start-order-link');
+
+                if (tableNumber) {
+                    tableEl.textContent = `桌號: ${tableNumber}`;
+                    orderLink.href = `/frontend/ordering_home_page/ordering-home-page.html?table=${tableNumber}`;
+                    localStorage.setItem('tableNumber', tableNumber); // 新增這行
+                } else {
+                    tableEl.textContent = `未偵測到桌號`;
+                    orderLink.href = `/frontend/ordering_home_page/ordering-home-page.html`;
+                }
+
+                fetchMenuData();
+                });
+
+                // 虛擬 fetchMenuData 函數（可依需求補上功能）
+                function fetchMenuData() {
+                console.log("Menu data fetched.");
+                }
+      
+</script>
+</body>
+
+
+
+</html>
