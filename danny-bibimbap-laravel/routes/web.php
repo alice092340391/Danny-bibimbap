@@ -16,7 +16,7 @@ Route::get('/order/{tableNumber}', function ($tableNumber) {
 
 Route::get('/', function () {
     if (Auth::check()) {
-        return redirect()->route('admin.orders.index');
+        return redirect()->route('admin.dashboard');
     }
     return redirect()->route('login');
 });
@@ -31,15 +31,11 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
 
-
-    Route::get('/menus', [AdminMenuController::class, 'index'])->name('menus.index');
-    Route::get('/menus/create', [AdminMenuController::class, 'create'])->name('menus.create');
-    Route::post('/menus', [AdminMenuController::class, 'store'])->name('menus.store');
-    Route::get('/menus/{menu}/edit', [AdminMenuController::class, 'edit'])->name('menus.edit');
-    Route::put('/menus/{menu}', [AdminMenuController::class, 'update'])->name('menus.update');
-    Route::delete('/menus/{menu}', [AdminMenuController::class, 'destroy'])->name('menus.destroy');
+    Route::resource('menus', AdminMenuController::class)->except(['show']);
 
 });
 
