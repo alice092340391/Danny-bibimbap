@@ -6,28 +6,19 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Menu;
-// 引入 Schema facade 來控制外鍵
 use Illuminate\Support\Facades\Schema;
 
 class MenuSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // 步驟 1: 暫時停用外鍵約束檢查
         Schema::disableForeignKeyConstraints();
 
-        // 步驟 2: 清空 menus 資料表
         Menu::truncate();
 
-        // 步驟 3: 重新啟用外鍵約束檢查
         Schema::enableForeignKeyConstraints();
 
-        // 步驟 4: 插入新的菜單資料
         DB::table('menus')->insert([
-            // --- 主餐 ---
             [
                 'name' => '經典韓式拌飯 (Bibimbap)',
                 'description' => '豐富蔬菜搭配特製辣醬，營養均衡的經典選擇。',
@@ -56,7 +47,6 @@ class MenuSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
-            // --- 小菜 ---
             [
                 'name' => '韓式炸雞 (小份)',
                 'description' => '酥脆外皮裹上甜辣醬汁，讓人吮指回味。',
@@ -71,12 +61,11 @@ class MenuSeeder extends Seeder
                 'description' => '滿滿的蝦仁與花枝，每一口都是大海的滋味。',
                 'price' => 150.00,
                 'category' => '小菜',
-                'is_available' => false, // 假設這個今天賣完了
+                'is_available' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
 
-            // --- 飲料 ---
             [
                 'name' => '可口可樂',
                 'description' => '清涼解渴的經典碳酸飲料。',

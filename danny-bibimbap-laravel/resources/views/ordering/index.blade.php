@@ -61,12 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableNumber = document.getElementById('table-number').textContent;
 
     let menuData = {};
-    let cart = []; // 購物車結構: [{ id, name, price, quantity }, ...]
+    let cart = []; 
 
-    // 1. 獲取菜單資料
     async function fetchMenu() {
         try {
-            const response = await fetch('/api/menu'); // 請求後端 API
+            const response = await fetch('/api/menu'); 
             if (!response.ok) throw new Error('無法取得菜單');
             menuData = await response.json();
             renderMenu();
@@ -75,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 2. 將菜單渲染到畫面上
     function renderMenu() {
         menuContainer.innerHTML = '';
         for (const category in menuData) {
@@ -109,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. 加入購物車邏輯
     function addToCart(item) {
         const existingItem = cart.find(cartItem => cartItem.id === item.id);
         if (existingItem) {
@@ -120,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCart();
     }
 
-    // 4. 更新購物車畫面與總金額
     function updateCart() {
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<p class="text-muted">您的購物車是空的。</p>';
@@ -147,20 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
         totalPriceEl.textContent = total;
     }
 
-    // 5. 改變數量 (掛載到 window 才能在 innerHTML 中被呼叫)
     window.changeQuantity = (index, delta) => {
         cart[index].quantity += delta;
         if (cart[index].quantity <= 0) {
-            cart.splice(index, 1); // 如果數量為 0 或更少，就從購物車移除
+            cart.splice(index, 1); 
         }
         updateCart();
     }
 
-    // 6. 送出訂單
     submitOrderBtn.addEventListener('click', async () => {
         if (cart.length === 0) return;
 
-        // 整理要送到後端的資料格式
         const orderData = {
             tableNumber: tableNumber,
             items: cart.map(item => ({ id: item.id, quantity: item.quantity }))
@@ -175,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel POST 請求需要 CSRF token
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' 
                 },
                 body: JSON.stringify(orderData)
             });
@@ -183,19 +176,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (!response.ok) {
-                // 處理後端回傳的錯誤，例如 "餐點已下架"
                 const errorMsg = result.message || '訂單送出失敗，請稍後再試';
                 alert(errorMsg);
-                // 如果是特定錯誤，可以考慮重新整理頁面讓使用者看到最新的菜單
                 if (response.status === 400) {
                     location.reload();
                 }
             } else {
                 alert(result.message);
-                // 訂單成功後的操作，例如清空購物車並導向感謝頁面
                 cart = [];
                 updateCart();
-                // 簡單起見，我們就重新整理頁面
                 location.reload();
             }
 
@@ -207,8 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-    // 初始載入
     fetchMenu();
 });
 </script>

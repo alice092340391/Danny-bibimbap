@@ -1,9 +1,8 @@
 <?php
-// app/Models/Staff.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable; // 使用 Laravel 內建的認證功能
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Staff extends Authenticatable
@@ -18,7 +17,7 @@ class Staff extends Authenticatable
         'position',
         'phone',
         'email',
-        'password', // 用於登入
+        'password',
     ];
 
     protected $hidden = [
