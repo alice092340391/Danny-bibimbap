@@ -13,11 +13,17 @@
         .sidebar a:hover, .sidebar a.active { color: #fff; background-color: #495057; }
         .sidebar .logout-form { padding: 15px 20px; }
         .main-content { margin-left: 250px; padding: 20px; width: calc(100% - 250px); }
+        .border-left-primary { border-left: .25rem solid #4e73df!important; }
+        .border-left-success { border-left: .25rem solid #1cc88a!important; }
+        .border-left-warning { border-left: .25rem solid #f6c23e!important; }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h5 class="text-white text-center mb-4">Danny Bibimbap</h5>
+        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <i class="fa-solid fa-tachometer-alt fa-fw me-2"></i>儀表板
+        </a>
         <a href="{{ route('admin.orders.index') }}" class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
             <i class="fa-solid fa-receipt fa-fw me-2"></i>訂單管理
         </a>
@@ -31,7 +37,6 @@
             </button>
         </form>
     </div>
-
     <div class="main-content">
         <div class="container-fluid">
             @if(session('success'))
@@ -42,7 +47,6 @@
             @yield('content')
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
